@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Agenda tu hora · Detailing</title>
-  <meta name="description" content="Reserva tu hora de detailing online en pocos pasos.">
+  <title>Studio Ultima Finish</title>
+  <meta name="description" content="Agenda tu hora de detailing online: Essential Finish, Studio Clean y Studio Reset.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✨</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,7 +15,7 @@
   <header class="hero">
     <div class="wrap">
       <div class="brand"><span class="logo">✨</span><span id="brandName"></span></div>
-      <h1>Agenda tu hora</h1>
+      <h1>Agenda tu <b>hora</b></h1>
       <p id="tagline" class="tagline"></p>
     </div>
   </header>
@@ -33,7 +33,7 @@
       <h2>¿Qué vehículo tienes?</h2>
       <div class="chips" id="vehicleList"></div>
 
-      <h2>Elige uno o más servicios</h2>
+      <h2>Elige tu servicio</h2>
       <div class="services" id="serviceList"></div>
     </section>
 
@@ -88,6 +88,7 @@
     <section class="panel" data-panel="4" hidden>
       <h2>Revisa tu reserva</h2>
       <div class="summary" id="summary"></div>
+      <p class="hint" id="nota"></p>
       <p class="hint">Al confirmar se abrirá WhatsApp con tu solicitud lista para enviar. Tu hora queda reservada cuando te respondamos confirmando.</p>
     </section>
 
@@ -113,7 +114,7 @@
   <div class="bar" id="bar">
     <div class="wrap bar-inner">
       <div class="total">
-        <small id="barInfo">Sin servicios</small>
+        <small id="barInfo">Elige un servicio</small>
         <strong id="barTotal">$0</strong>
       </div>
       <div class="bar-btns">

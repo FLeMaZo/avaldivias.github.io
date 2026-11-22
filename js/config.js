@@ -2,13 +2,14 @@
    CONFIGURACIÓN DEL NEGOCIO — edita solo este archivo
    ========================================================= */
 window.CONFIG = {
-  negocio: "Detailing Pro",
-  eslogan: "Cuidamos tu auto como si fuera nuestro",
-  direccion: "Tu dirección, Ciudad",
-  instagram: "",                // ej: "detailingpro" (sin @). Vacío = se oculta
+  negocio: "Studio Ultima Finish",
+  eslogan: "Detailing · Car Care · Estética Automotriz",
+  direccion: "",                // ej: "Av. Siempre Viva 123, Iquique". Vacío = se oculta
+  instagram: "",                // ej: "studioultimafinish" (sin @). Vacío = se oculta
 
   // Número de WhatsApp que recibe las reservas: código país + número, sin "+" ni espacios
-  whatsapp: "56900000000",
+  whatsapp: "56995736685",
+  nota: "Precios sujetos a evaluación del vehículo.",
 
   moneda: "CLP",
   locale: "es-CL",
@@ -31,26 +32,59 @@ window.CONFIG = {
   // Días cerrados puntuales (feriados, vacaciones) en formato AAAA-MM-DD
   diasBloqueados: ["2026-12-25", "2027-01-01"],
 
-  // Tamaño del vehículo: multiplica el precio del servicio
+  // Tipos de vehículo (los ids se usan en "precios" de cada servicio)
   vehiculos: [
-    { id: "auto", nombre: "Auto / Hatchback", icono: "🚗", factor: 1 },
-    { id: "suv", nombre: "SUV / Station", icono: "🚙", factor: 1.2 },
-    { id: "camioneta", nombre: "Camioneta / Van", icono: "🛻", factor: 1.4 },
+    { id: "auto", nombre: "Auto", icono: "🚗" },
+    { id: "suv", nombre: "SUV", icono: "🚙" },
+    { id: "suv_xl", nombre: "SUV XL", icono: "🚙" },
+    { id: "camioneta", nombre: "Camioneta", icono: "🛻" },
+    { id: "camioneta_xl", nombre: "Camioneta XL", icono: "🛻" },
   ],
 
-  // Servicios: precio base (auto) y duración en minutos
+  // Servicios. "duracion" en minutos (estimada: ajústala a tu realidad)
   servicios: [
-    { id: "lavado", nombre: "Lavado Premium", precio: 15000, duracion: 60,
-      desc: "Lavado exterior a mano, aspirado, limpieza de vidrios y llantas." },
-    { id: "interior", nombre: "Limpieza Interior Profunda", precio: 45000, duracion: 180,
-      desc: "Lavado de tapiz, plásticos, alfombras y hidratación de cueros." },
-    { id: "pulido", nombre: "Pulido y Encerado", precio: 60000, duracion: 240,
-      desc: "Corrección de micro-rayas en 1 etapa y cera protectora." },
-    { id: "ceramico", nombre: "Tratamiento Cerámico", precio: 180000, duracion: 480,
-      desc: "Descontaminado, pulido y recubrimiento cerámico de larga duración." },
-    { id: "motor", nombre: "Limpieza de Motor", precio: 20000, duracion: 60,
-      desc: "Desengrasado y acondicionamiento de plásticos del motor." },
-    { id: "focos", nombre: "Restauración de Focos", precio: 25000, duracion: 60,
-      desc: "Pulido de focos opacos y sellado UV." },
+    {
+      id: "essential", nombre: "Essential Finish", subtitulo: "De mantención", etiqueta: "",
+      duracion: 90,
+      precios: { auto: 25000, suv: 30000, suv_xl: 35000, camioneta: 35000, camioneta_xl: 40000 },
+      incluye: [
+        "Lavado Snow Foam",
+        "Limpieza e hidratación de puertas y tablero",
+        "Aspirado completo",
+        "Lavado de vidrios y espejos",
+        "Incluye cera Meguiar's o Sonax",
+      ],
+    },
+    {
+      id: "clean", nombre: "Studio Clean", subtitulo: "Limpieza interior y exterior al detalle", etiqueta: "Nuevo",
+      duracion: 180,
+      precios: { auto: 50000, suv: 55000, suv_xl: 60000, camioneta: 60000, camioneta_xl: 65000 },
+      incluye: [
+        "Lavado Snow Foam y exterior detallado",
+        "Limpieza de llantas y pasarruedas",
+        "Aspirado completo de cabina y maletero",
+        "Limpieza de tablero, consola y puertas",
+        "Hidratación de plásticos y gomas",
+        "Vidrios y espejos sin marcas",
+        "Sellado rápido de protección",
+      ],
+    },
+    {
+      id: "reset", nombre: "Studio Reset", subtitulo: "Limpieza completa al detalle · incluye tapicería", etiqueta: "Premium",
+      duracion: 360,
+      precios: { auto: 80000, suv: 90000, suv_xl: 100000, camioneta: 100000, camioneta_xl: 110000 },
+      incluye: [
+        "Lavado profundo de tapicería (tela o cuero)",
+        "Snow Foam: descontaminación y prelavado",
+        "Aspirado completo de todo el interior",
+        "Detallado de tablero, consola y puertas",
+        "Limpieza profunda de plásticos y gomas",
+        "Limpieza de llantas y pasarruedas",
+        "Vidrios y espejos sin marcas",
+        "Sellado sintético, acabado duradero",
+        "Brillo de neumáticos y detalles",
+        "Renovación total: se siente como nuevo",
+      ],
+    },
   ],
 };

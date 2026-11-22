@@ -33,7 +33,7 @@
 
   const vehiculoSel = () => C.vehiculos.find((v) => v.id === state.vehiculo);
   const serviciosSel = () => C.servicios.filter((s) => state.servicios.has(s.id));
-  const precio = (s) => Math.round((s.precio * vehiculoSel().factor) / 500) * 500;
+  const precio = (s) => s.precios[state.vehiculo];
   const total = () => serviciosSel().reduce((a, s) => a + precio(s), 0);
   const duracion = () => serviciosSel().reduce((a, s) => a + s.duracion, 0);
 
@@ -44,8 +44,10 @@
   document.title = `Agenda tu hora · ${C.negocio}`;
   $("#brandName").textContent = C.negocio;
   $("#tagline").textContent = C.eslogan;
+  $("#nota").textContent = C.nota || "";
   $("#footerInfo").innerHTML =
-    `${esc(C.negocio)} · ${esc(C.direccion)}` +
+    [C.negocio, C.direccion].filter(Boolean).map(esc).join(" · ") +
+    (C.whatsapp ? ` · <a href="https://wa.me/${C.whatsapp}" target="_blank" rel="noopener">WhatsApp +${esc(C.whatsapp)}</a>` : "") +
     (C.instagram ? ` · <a href="https://instagram.com/${encodeURIComponent(C.instagram)}" target="_blank" rel="noopener">@${esc(C.instagram)}</a>` : "");
 
   /* ---------- paso 1: vehículo y servicios ---------- */
@@ -58,8 +60,9 @@
   function renderServicios() {
     $("#serviceList").innerHTML = C.servicios.map((s) =>
       `<button type="button" class="service" data-id="${s.id}" aria-pressed="${state.servicios.has(s.id)}">
-         <strong>${esc(s.nombre)}</strong>
-         <p>${esc(s.desc)}</p>
+         <strong>${esc(s.nombre)}${s.etiqueta ? ` <em class="tag">${esc(s.etiqueta)}</em>` : ""}</strong>
+         <small class="sub">${esc(s.subtitulo)}</small>
+         <ul class="incluye">${s.incluye.map((i) => `<li>${esc(i)}</li>`).join("")}</ul>
          <div class="meta"><span class="price">${money(precio(s))}</span><span class="dur">⏱ ${durText(s.duracion)}</span></div>
        </button>`).join("");
   }
@@ -71,8 +74,10 @@
   $("#serviceList").addEventListener("click", (e) => {
     const b = e.target.closest(".service"); if (!b) return;
     const id = b.dataset.id;
-    state.servicios.has(id) ? state.servicios.delete(id) : state.servicios.add(id);
-    b.setAttribute("aria-pressed", state.servicios.has(id));
+    const yaEstaba = state.servicios.has(id);
+    state.servicios.clear(); // un plan a la vez
+    if (!yaEstaba) state.servicios.add(id);
+    renderServicios();
     state.hora = null; // la duración cambió: revalidar hora
     update();
   });
@@ -189,7 +194,7 @@
       `Hola ${C.negocio}! Quiero agendar una hora 🚗✨`,
       ``,
       `📅 ${fechaLarga(state.fecha)} a las ${state.hora}`,
-      `🧽 Servicios:`,
+      `🧽 Servicio:`,
       ...serviciosSel().map((s) => `  • ${s.nombre} (${money(precio(s))})`),
       `💰 Total estimado: ${money(total())}`,
       `⏱ Duración aprox.: ${durText(duracion())}`,
@@ -276,8 +281,8 @@
   function update() {
     const n = state.servicios.size;
     $("#barInfo").textContent = n
-      ? `${n} servicio${n > 1 ? "s" : ""} · ${durText(duracion())}${state.hora ? " · " + state.hora : ""}`
-      : "Sin servicios";
+      ? `${serviciosSel().map((s) => s.nombre).join(" + ")} · ${vehiculoSel().nombre}${state.hora ? " · " + state.hora : ""}`
+      : "Elige un servicio";
     $("#barTotal").textContent = money(total());
     $("#backBtn").hidden = state.step === 1;
     $("#nextBtn").textContent = state.step === 4 ? "Confirmar" : "Continuar";
