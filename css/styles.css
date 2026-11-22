@@ -124,6 +124,10 @@ button, input, textarea { font: inherit; color: inherit; }
 }
 .slot.selected { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
 .hint { color: var(--muted); font-size: .9rem; }
+.alert {
+  background: color-mix(in srgb, #f59e0b 14%, var(--surface)); border: 1px solid color-mix(in srgb, #f59e0b 45%, transparent);
+  border-radius: 12px; padding: 12px 14px; font-size: .95rem; text-align: left; margin: 16px 0;
+}
 
 /* Formulario */
 .form { display: grid; gap: 14px; }
