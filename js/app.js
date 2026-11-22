@@ -12,7 +12,10 @@
     hora: null,    // "HH:MM"
     mes: firstOfMonth(new Date()),
     cliente: {},
+    ocup: {},          // {"AAAA-MM-DD_HH": autos ocupando esa hora}
+    cargando: false,
   };
+  let DB = null;       // módulo de base de datos (si Firebase está configurado)
 
   /* ---------- utilidades ---------- */
   const money = (n) =>
@@ -114,9 +117,30 @@
     const out = [];
     for (let m = abre; m + ocupa <= cierra; m += C.intervaloMin) {
       const t = new Date(d); t.setHours(0, m, 0, 0);
-      if (t.getTime() >= minimo) out.push(fromMin(m));
+      if (t.getTime() >= minimo && hayCupo(fechaStr, m, ocupa)) out.push(fromMin(m));
     }
     return out;
+  }
+
+  // ¿Quedan puestos libres en todas las horas que ocuparía el trabajo?
+  function hayCupo(fecha, inicioMin, durMin) {
+    if (!DB) return true;
+    for (let h = Math.floor(inicioMin / 60); h * 60 < inicioMin + durMin; h++) {
+      if ((state.ocup[`${fecha}_${pad(h)}`] || 0) >= DB.CAPACIDAD) return false;
+    }
+    return true;
+  }
+
+  async function cargarOcupacion() {
+    if (!DB) return;
+    state.cargando = true; renderSlots();
+    try {
+      state.ocup = (await DB.ocupacion(ymd(hoy), ymd(limite))).cuenta;
+    } catch (e) {
+      console.error(e);
+    }
+    state.cargando = false;
+    if (state.step === 2) { renderCalendario(); renderSlots(); update(); }
   }
 
   function renderCalendario() {
@@ -145,11 +169,16 @@
       $("#slotHint").textContent = "Selecciona un día para ver los horarios disponibles.";
       return;
     }
+    if (state.cargando) {
+      $("#slotHint").textContent = "Cargando horarios disponibles…";
+      $("#slotList").innerHTML = "";
+      return;
+    }
     const slots = slotsDelDia(state.fecha);
     if (state.hora && !slots.includes(state.hora)) state.hora = null;
     $("#slotHint").textContent = slots.length
       ? `${fechaLarga(state.fecha)} · duración estimada ${durText(duracion())}`
-      : "No quedan horarios para este día.";
+      : "No quedan horarios para este día. Prueba con otra fecha.";
     $("#slotList").innerHTML = slots.map((h) =>
       `<button type="button" class="slot ${h === state.hora ? "selected" : ""}" data-hora="${h}">${h}</button>`).join("");
   }
@@ -205,10 +234,11 @@
       <div class="item total-row"><dt>Total estimado</dt><dd>${money(total())}</dd></div></dl>`;
   }
 
-  function mensajeWhatsApp() {
+  function mensajeWhatsApp(codigo) {
     const c = state.cliente;
     return [
       `Hola ${C.negocio}! Quiero agendar una hora 🚗✨`,
+      codigo ? `🔖 Reserva #${codigo}` : null,
       ``,
       `📅 ${fechaLarga(state.fecha)} a las ${state.hora}`,
       `🧽 Servicio:`,
@@ -224,20 +254,56 @@
     ].filter((l) => l !== null).join("\n");
   }
 
-  function confirmar() {
+  async function confirmar() {
+    const btn = $("#nextBtn");
+    btn.disabled = true; btn.textContent = "Reservando…";
+    $("#confirmError").hidden = true;
+    // Se abre la pestaña ya (en el toque) para que el navegador no la bloquee
+    const ventana = DB ? window.open("", "_blank") : null;
+    let codigo = null;
+
+    if (DB) {
+      const c = state.cliente;
+      try {
+        const id = await DB.reservar({
+          fecha: state.fecha, hora: state.hora, duracion: duracion(),
+          servicio: serviciosSel().map((s) => s.nombre).join(" + "),
+          vehiculoTipo: vehiculoSel().nombre, total: total(),
+          nombre: c.nombre, telefono: c.telefono, email: c.email || "",
+          vehiculo: c.vehiculo, patente: (c.patente || "").toUpperCase(), notas: c.notas || "",
+        });
+        codigo = id.slice(0, 6).toUpperCase();
+      } catch (e) {
+        ventana?.close();
+        console.error(e);
+        if (e.message === "OCUPADO") {
+          state.hora = null;
+          irA(2);
+          $("#slotMsg").hidden = false;
+        } else {
+          $("#confirmError").hidden = false;
+          update();
+        }
+        return;
+      }
+    }
+
     const reserva = {
-      id: Date.now().toString(36),
+      id: codigo || Date.now().toString(36),
       fecha: state.fecha, hora: state.hora,
       servicios: serviciosSel().map((s) => s.nombre),
       total: total(), duracion: duracion(),
       vehiculo: state.cliente.vehiculo,
     };
     save([...load(), reserva]);
-    const url = `https://wa.me/${C.whatsapp}?text=${encodeURIComponent(mensajeWhatsApp())}`;
+    const url = `https://wa.me/${C.whatsapp}?text=${encodeURIComponent(mensajeWhatsApp(codigo))}`;
     $("#waLink").href = url;
     $("#icsBtn").onclick = () => descargarIcs(reserva);
-    window.open(url, "_blank", "noopener");
+    $("#codigo").textContent = codigo ? `Código de reserva: #${codigo}` : "";
+    if (ventana) ventana.location.href = url;
+    else window.open(url, "_blank", "noopener");
     renderMisReservas();
+    irA(5);
   }
 
   function descargarIcs(r) {
@@ -289,7 +355,8 @@
       li.classList.toggle("done", n < step);
     });
     $("#stepper").style.setProperty("--progress", Math.min(step - 1, 3) / 3);
-    if (step === 2) { renderCalendario(); renderSlots(); }
+    if (step === 2) { renderCalendario(); renderSlots(); cargarOcupacion(); }
+    if (step !== 2) $("#slotMsg").hidden = true;
     if (step === 4) renderResumen();
     $("#bar").hidden = step === 5;
     const y = $("#stepper").getBoundingClientRect().top + window.scrollY - 12;
@@ -313,7 +380,7 @@
       form.querySelector(".invalid")?.focus();
       return;
     }
-    if (state.step === 4) { confirmar(); irA(5); return; }
+    if (state.step === 4) { confirmar(); return; }
     irA(state.step + 1);
   });
   $("#backBtn").addEventListener("click", () => irA(Math.max(1, state.step - 1)));
@@ -323,6 +390,15 @@
   });
 
   /* ---------- inicio ---------- */
+  if (window.FIREBASE_CONFIG) {
+    import("./db.js")
+      .then(async (mod) => {
+        await mod.init(window.FIREBASE_CONFIG, { emulador: !!window.FIREBASE_EMULADOR });
+        DB = mod;
+        if (state.step === 2) cargarOcupacion();
+      })
+      .catch((e) => console.error("No se pudo conectar a la base de datos", e));
+  }
   renderVehiculos();
   renderServicios();
   renderMisReservas();
