@@ -42,28 +42,45 @@
 
   /* ---------- cabecera / pie ---------- */
   document.title = `Agenda tu hora · ${C.negocio}`;
-  $("#brandName").textContent = C.negocio;
-  $("#tagline").textContent = C.eslogan;
   $("#nota").textContent = C.nota || "";
+  $("#nota1").textContent = C.nota || "";
+  $("#waFooter").href = `https://wa.me/${C.whatsapp}`;
+  $("#waFooterText").textContent = "+" + C.whatsapp.replace(/^(\d{2})(\d)(\d{4})(\d{4})$/, "$1 $2 $3 $4");
   $("#footerInfo").innerHTML =
     [C.negocio, C.direccion].filter(Boolean).map(esc).join(" · ") +
-    (C.whatsapp ? ` · <a href="https://wa.me/${C.whatsapp}" target="_blank" rel="noopener">WhatsApp +${esc(C.whatsapp)}</a>` : "") +
     (C.instagram ? ` · <a href="https://instagram.com/${encodeURIComponent(C.instagram)}" target="_blank" rel="noopener">@${esc(C.instagram)}</a>` : "");
 
   /* ---------- paso 1: vehículo y servicios ---------- */
+  const W = '<circle cx="16" cy="22" r="4.5"/><circle cx="48" cy="22" r="4.5"/><path d="M4 22h7.5M20.5 22h23M52.5 22H60"/>';
+  const ICONOS = {
+    auto: `<path d="M4 22v-3.5c0-2 1.4-3.2 3.4-3.6L14 13.6l6.6-6c1-.9 2.1-1.3 3.4-1.3h13c1.5 0 2.8.6 3.8 1.7l5.4 5.6 9 1.6c2.3.4 3.8 2.1 3.8 4.3V22"/><path d="M22 13.4h22"/>${W}`,
+    suv: `<path d="M4 22v-6c0-1.6 1-2.7 2.6-3L12 12l4.6-6c.8-1 1.9-1.6 3.2-1.6H46c1.4 0 2.5.6 3.2 1.8L53 12l4.8 1c1.4.3 2.2 1.3 2.2 2.7V22"/><path d="M17 12h33"/>${W}`,
+    camioneta: `<path d="M4 22v-6.5c0-1.3.8-2 2-2h20V7.2c0-1 .8-1.7 1.8-1.7H40c1 0 1.8.4 2.4 1.2L48 13l8 1.4c2.2.4 4 1.6 4 3.7V22"/><path d="M26 13.5h22"/>${W}`,
+  };
+  const icono = (id) => {
+    const base = id.replace(/_xl$/, "");
+    return ICONOS[base]
+      ? `<svg viewBox="0 0 64 30" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${ICONOS[base]}</svg>`
+      : "";
+  };
   function renderVehiculos() {
     $("#vehicleList").innerHTML = C.vehiculos.map((v) =>
       `<button type="button" class="chip" data-id="${v.id}" aria-pressed="${v.id === state.vehiculo}">
-         <span class="ico">${v.icono}</span>${esc(v.nombre)}
+         ${/_xl$/.test(v.id) ? '<span class="xl">XL</span>' : ""}${icono(v.id) || `<span class="ico">${v.icono}</span>`}${esc(v.nombre)}
        </button>`).join("");
   }
   function renderServicios() {
     $("#serviceList").innerHTML = C.servicios.map((s) =>
       `<button type="button" class="service" data-id="${s.id}" aria-pressed="${state.servicios.has(s.id)}">
-         <strong>${esc(s.nombre)}${s.etiqueta ? ` <em class="tag">${esc(s.etiqueta)}</em>` : ""}</strong>
-         <small class="sub">${esc(s.subtitulo)}</small>
-         <ul class="incluye">${s.incluye.map((i) => `<li>${esc(i)}</li>`).join("")}</ul>
-         <div class="meta"><span class="price">${money(precio(s))}</span><span class="dur">⏱ ${durText(s.duracion)}</span></div>
+         <div class="head">
+           <strong>${esc(s.nombre)}</strong>
+           <span class="sub">${esc(s.subtitulo)}</span>
+           ${s.etiqueta ? `<span class="tag">${esc(s.etiqueta)}</span>` : ""}
+         </div>
+         <div class="body">
+           <ul class="incluye">${s.incluye.map((i) => `<li>${esc(i)}</li>`).join("")}</ul>
+           <div class="meta"><span class="price">${money(precio(s))}</span><span class="dur">⏱ ${durText(s.duracion)}</span></div>
+         </div>
        </button>`).join("");
   }
   $("#vehicleList").addEventListener("click", (e) => {
@@ -271,10 +288,12 @@
       li.classList.toggle("active", n === step);
       li.classList.toggle("done", n < step);
     });
+    $("#stepper").style.setProperty("--progress", Math.min(step - 1, 3) / 3);
     if (step === 2) { renderCalendario(); renderSlots(); }
     if (step === 4) renderResumen();
     $("#bar").hidden = step === 5;
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    const y = $("#stepper").getBoundingClientRect().top + window.scrollY - 12;
+    window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
     update();
   }
 
