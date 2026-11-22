@@ -5,7 +5,7 @@ window.CONFIG = {
   negocio: "Studio Ultima Finish",
   eslogan: "Detailing · Car Care · Estética Automotriz",
   direccion: "",                // ej: "Av. Siempre Viva 123, Iquique". Vacío = se oculta
-  instagram: "",                // ej: "studioultimafinish" (sin @). Vacío = se oculta
+  instagram: "ultimafinishdetailing_ccp",              // ej: "studioultimafinish" (sin @). Vacío = se oculta
 
   // Número de WhatsApp que recibe las reservas: código país + número, sin "+" ni espacios
   whatsapp: "56995736685",
@@ -45,7 +45,7 @@ window.CONFIG = {
   servicios: [
     {
       id: "essential", nombre: "Essential Finish", subtitulo: "De mantención", etiqueta: "",
-      duracion: 90,
+      duracion: 150,
       precios: { auto: 25000, suv: 30000, suv_xl: 35000, camioneta: 35000, camioneta_xl: 40000 },
       incluye: [
         "Lavado Snow Foam",
@@ -57,7 +57,7 @@ window.CONFIG = {
     },
     {
       id: "clean", nombre: "Studio Clean", subtitulo: "Limpieza interior y exterior al detalle", etiqueta: "Nuevo",
-      duracion: 180,
+      duracion: 240,
       precios: { auto: 50000, suv: 55000, suv_xl: 60000, camioneta: 60000, camioneta_xl: 65000 },
       incluye: [
         "Lavado Snow Foam y exterior detallado",
@@ -71,7 +71,7 @@ window.CONFIG = {
     },
     {
       id: "reset", nombre: "Studio Reset", subtitulo: "Limpieza completa al detalle · incluye tapicería", etiqueta: "Premium",
-      duracion: 360,
+      duracion: 420,
       precios: { auto: 80000, suv: 90000, suv_xl: 100000, camioneta: 100000, camioneta_xl: 110000 },
       incluye: [
         "Lavado profundo de tapicería (tela o cuero)",
