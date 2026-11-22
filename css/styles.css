@@ -294,6 +294,7 @@ a { color: var(--cyan); }
   background: rgba(34, 197, 94, .14); color: var(--ok); font-size: 2.3rem; font-weight: 900;
   box-shadow: 0 0 0 8px rgba(34, 197, 94, .06), 0 0 30px rgba(34, 197, 94, .3);
 }
+.codigo { font-family: var(--display); font-style: italic; font-weight: 800; color: var(--cyan); letter-spacing: .04em; margin: -4px 0 0; }
 .done-actions { display: grid; gap: 10px; max-width: 340px; margin: 20px auto 0; }
 
 /* ---------- Mis reservas ---------- */

@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Panel · Studio Ultima Finish</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#04070f">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗓️</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,700;0,800;1,700;1,800;1,900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="admin">
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <div>
+        <div class="brand-mark">Panel <span class="acc">Ultima Finish</span></div>
+        <div class="brand-sub" id="userEmail"></div>
+      </div>
+      <button type="button" class="btn ghost small" id="logoutBtn" hidden>Salir</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- Sin configuración -->
+    <section class="card center" id="noConfig" hidden>
+      <h2>Falta conectar la base de datos</h2>
+      <p class="hint">Completa <code>js/firebase-config.js</code> con los datos de tu proyecto Firebase.</p>
+    </section>
+
+    <!-- Login -->
+    <section class="card login" id="loginView" hidden>
+      <h2>Ingresar</h2>
+      <form id="loginForm" class="form">
+        <label>Correo <input name="email" type="email" autocomplete="username" required></label>
+        <label>Contraseña <input name="pass" type="password" autocomplete="current-password" required></label>
+        <p class="alert" id="loginError" hidden></p>
+        <button class="btn primary" type="submit">Entrar</button>
+      </form>
+    </section>
+
+    <!-- Panel -->
+    <section id="panelView" hidden>
+      <div class="tabs" role="tablist">
+        <button type="button" class="tab active" data-tab="dia" role="tab">Agenda del día</button>
+        <button type="button" class="tab" data-tab="pend" role="tab">Por confirmar <span class="count" id="pendCount"></span></button>
+      </div>
+
+      <!-- Agenda del día -->
+      <div data-view="dia">
+        <div class="daynav">
+          <button type="button" class="icon-btn" id="prevDay" aria-label="Día anterior">‹</button>
+          <label class="daylabel">
+            <strong id="dayLabel"></strong>
+            <input type="date" id="dayInput" aria-label="Elegir fecha">
+          </label>
+          <button type="button" class="icon-btn" id="nextDay" aria-label="Día siguiente">›</button>
+        </div>
+        <div class="daystats">
+          <button type="button" class="btn ghost small" id="todayBtn">Hoy</button>
+          <span id="dayStats"></span>
+        </div>
+
+        <h3>Reservas</h3>
+        <div id="dayList" class="list"></div>
+
+        <h3>Ocupación <small>Toca un espacio libre para bloquearlo (ej. cliente sin reserva)</small></h3>
+        <div class="grid-legend">
+          <span><i class="lg free"></i>Libre</span><span><i class="lg res"></i>Reserva</span><span><i class="lg blk"></i>Bloqueado</span>
+        </div>
+        <div id="dayGrid" class="hgrid"></div>
+        <div class="grid-actions">
+          <button type="button" class="btn small" id="blockDayBtn">Bloquear día completo</button>
+          <button type="button" class="btn ghost small" id="unblockDayBtn">Quitar bloqueos del día</button>
+        </div>
+      </div>
+
+      <!-- Pendientes -->
+      <div data-view="pend" hidden>
+        <h3>Reservas por confirmar</h3>
+        <div id="pendList" class="list"></div>
+      </div>
+    </section>
+
+    <div class="toast" id="toast" hidden></div>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script type="module" src="js/admin.js"></script>
+</body>
+</html>

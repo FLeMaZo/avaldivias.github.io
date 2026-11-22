@@ -84,6 +84,7 @@
       </div>
 
       <h2>Elige la hora de llegada</h2>
+      <p class="alert" id="slotMsg" hidden>⚠️ Esa hora se acaba de ocupar. Elige otra, por favor.</p>
       <p class="hint" id="slotHint">Selecciona un día para ver los horarios disponibles.</p>
       <div class="slots" id="slotList"></div>
     </section>
@@ -119,6 +120,7 @@
     <section class="panel" data-panel="4" hidden>
       <h2>Revisa tu reserva</h2>
       <div class="summary" id="summary"></div>
+      <p class="alert" id="confirmError" hidden>No pudimos guardar tu reserva. Revisa tu conexión a internet e inténtalo de nuevo.</p>
       <p class="hint" id="nota"></p>
       <p class="alert">📲 Al confirmar se abrirá WhatsApp con tu solicitud escrita. <b>Debes tocar el botón enviar ➤</b> para que la recibamos.</p>
       <p class="hint">Tu hora queda reservada cuando te respondamos confirmando.</p>
@@ -128,6 +130,7 @@
     <section class="panel done-panel" data-panel="5" hidden>
       <div class="check">✓</div>
       <h2>¡Casi listo!</h2>
+      <p class="codigo" id="codigo"></p>
       <p class="alert">⚠️ <b>Falta un paso:</b> en WhatsApp toca <b>enviar ➤</b>. Si no lo envías, no recibimos tu solicitud.</p>
       <p>Si WhatsApp no se abrió, toca el botón de abajo.</p>
       <div class="done-actions">
@@ -163,6 +166,7 @@
   </footer>
 
   <script src="js/config.js"></script>
+  <script src="js/firebase-config.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>
