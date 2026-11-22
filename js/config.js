@@ -17,12 +17,12 @@ window.CONFIG = {
   // Horario de atención. 0 = domingo, 1 = lunes ... 6 = sábado. null = cerrado
   horario: {
     0: null,
-    1: { abre: "09:00", cierra: "19:00" },
-    2: { abre: "09:00", cierra: "19:00" },
-    3: { abre: "09:00", cierra: "19:00" },
-    4: { abre: "09:00", cierra: "19:00" },
-    5: { abre: "09:00", cierra: "19:00" },
-    6: { abre: "10:00", cierra: "14:00" },
+    1: { abre: "09:00", cierra: "20:00" },
+    2: { abre: "09:00", cierra: "20:00" },
+    3: { abre: "09:00", cierra: "20:00" },
+    4: { abre: "09:00", cierra: "20:00" },
+    5: { abre: "09:00", cierra: "20:00" },
+    6: { abre: "09:00", cierra: "20:00" },
   },
 
   intervaloMin: 60,      // cada cuántos minutos se ofrece una hora
@@ -30,7 +30,7 @@ window.CONFIG = {
   minHorasAviso: 2,      // no permitir reservas con menos de X horas de aviso
 
   // Días cerrados puntuales (feriados, vacaciones) en formato AAAA-MM-DD
-  diasBloqueados: ["2026-12-25", "2027-01-01"],
+  diasBloqueados: [],
 
   // Tipos de vehículo (los ids se usan en "precios" de cada servicio)
   vehiculos: [
