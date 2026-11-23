@@ -46,7 +46,7 @@ window.CONFIG = {
   servicios: [
     {
       id: "essential", nombre: "Essential Finish", subtitulo: "De mantención", etiqueta: "",
-      duracion: 150,
+      duracion: 120,
       precios: { auto: 25000, suv: 30000, suv_xl: 35000, camioneta: 35000, camioneta_xl: 40000 },
       incluye: [
         "Lavado Snow Foam",
@@ -73,6 +73,8 @@ window.CONFIG = {
     {
       id: "reset", nombre: "Studio Reset", subtitulo: "Limpieza completa al detalle · incluye tapicería", etiqueta: "Premium",
       duracion: 420,
+      // minutos adicionales solo para este servicio según el vehículo
+      extraPorVehiculo: { suv: 60, suv_xl: 60, camioneta: 60, camioneta_xl: 60 },
       precios: { auto: 80000, suv: 90000, suv_xl: 100000, camioneta: 100000, camioneta_xl: 110000 },
       incluye: [
         "Lavado profundo de tapicería (tela o cuero)",
