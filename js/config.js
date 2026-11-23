@@ -32,6 +32,9 @@ window.CONFIG = {
   // Días cerrados puntuales (feriados, vacaciones) en formato AAAA-MM-DD
   diasBloqueados: [],
 
+  // Marcas que aparecen en la franja animada del inicio
+  marcas: ["Meguiar's", "Sonax"],
+
   // Tipos de vehículo (los ids se usan en "precios" de cada servicio)
   vehiculos: [
     // extraMin: minutos que se suman a la duración del servicio por el tamaño del vehículo
@@ -72,6 +75,7 @@ window.CONFIG = {
     },
     {
       id: "reset", nombre: "Studio Reset", subtitulo: "Limpieza completa al detalle · incluye tapicería", etiqueta: "Premium",
+      marca: { logo: "assets/brands/meguiars.png", nombre: "Meguiar's", texto: "Trabajamos con productos Meguiar's" },
       duracion: 420,
       // minutos adicionales solo para este servicio según el vehículo
       extraPorVehiculo: { suv: 60, suv_xl: 60, camioneta: 60, camioneta_xl: 60 },

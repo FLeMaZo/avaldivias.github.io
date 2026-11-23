@@ -58,6 +58,16 @@
     [C.negocio, C.direccion].filter(Boolean).map(esc).join(" · ") +
     (C.instagram ? ` · <a href="https://instagram.com/${encodeURIComponent(C.instagram)}" target="_blank" rel="noopener">@${esc(C.instagram)}</a>` : "");
 
+  /* ---------- franja de marcas ---------- */
+  if (C.marcas && C.marcas.length) {
+    // se repite la lista para que la franja corra sin cortes
+    const grupo = Array.from({ length: Math.max(4, Math.ceil(10 / C.marcas.length)) }, () => C.marcas).flat();
+    const html = grupo.map((m) => `<span class="brand">${esc(m)}</span><span class="sep" aria-hidden="true">✦</span>`).join("");
+    $("#brandTrack").innerHTML = `<div class="marquee-group">${html}</div><div class="marquee-group" aria-hidden="true">${html}</div>`;
+  } else {
+    document.querySelector(".brands").hidden = true;
+  }
+
   /* ---------- paso 1: vehículo y servicios ---------- */
   const W = '<circle cx="16" cy="22" r="4.5"/><circle cx="48" cy="22" r="4.5"/><path d="M4 22h7.5M20.5 22h23M52.5 22H60"/>';
   const ICONOS = {
@@ -83,7 +93,11 @@
          <div class="head">
            <strong>${esc(s.nombre)}</strong>
            <span class="sub">${esc(s.subtitulo)}</span>
-           ${s.etiqueta ? `<span class="tag">${esc(s.etiqueta)}</span>` : ""}
+           ${s.etiqueta || s.marca ? `<div class="tag-row">
+             ${s.etiqueta ? `<span class="tag">${esc(s.etiqueta)}</span>` : ""}
+             ${s.marca ? `<img class="marca-logo" src="${esc(s.marca.logo)}" alt="${esc(s.marca.nombre)}" width="120" height="63">` : ""}
+           </div>` : ""}
+           ${s.marca ? `<span class="marca">${esc(s.marca.texto)}</span>` : ""}
          </div>
          <div class="body">
            <ul class="incluye">${s.incluye.map((i) => `<li>${esc(i)}</li>`).join("")}</ul>
@@ -410,7 +424,7 @@
 
   /* ---------- inicio ---------- */
   if (window.FIREBASE_CONFIG) {
-    import("./db.js")
+    import("./db.js?v=20261123c")
       .then(async (mod) => {
         await mod.init(window.FIREBASE_CONFIG, { emulador: !!window.FIREBASE_EMULADOR });
         DB = mod;
