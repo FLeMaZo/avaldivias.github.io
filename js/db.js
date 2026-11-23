@@ -94,6 +94,9 @@ export async function reservasEntre(desde, hasta) {
     .sort((a, b) => (a.fecha + a.hora).localeCompare(b.fecha + b.hora));
 }
 
+export const actualizar = (id, datos) =>
+  fs.updateDoc(fs.doc(db, "reservas", id), datos);
+
 export const cambiarEstado = (id, estado) =>
   fs.updateDoc(fs.doc(db, "reservas", id), { estado });
 

@@ -45,8 +45,9 @@
     <!-- Panel -->
     <section id="panelView" hidden>
       <div class="tabs" role="tablist">
-        <button type="button" class="tab active" data-tab="dia" role="tab">Agenda del día</button>
+        <button type="button" class="tab active" data-tab="dia" role="tab">Agenda</button>
         <button type="button" class="tab" data-tab="pend" role="tab">Por confirmar <span class="count" id="pendCount"></span></button>
+        <button type="button" class="tab" data-tab="rec" role="tab">Recordatorios <span class="count" id="recCount"></span></button>
       </div>
 
       <!-- Agenda del día -->
@@ -82,6 +83,13 @@
       <div data-view="pend" hidden>
         <h3>Reservas por confirmar</h3>
         <div id="pendList" class="list"></div>
+      </div>
+
+      <!-- Recordatorios -->
+      <div data-view="rec" hidden>
+        <h3>Recordatorios · <span id="recLabel"></span></h3>
+        <p class="hint">Clientes de tu próximo día de atención. Toca <b>Enviar recordatorio</b>: se abre WhatsApp con el mensaje listo y solo tocas enviar.</p>
+        <div id="recList" class="list"></div>
       </div>
     </section>
 
