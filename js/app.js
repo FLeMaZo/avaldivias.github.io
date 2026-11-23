@@ -61,8 +61,11 @@
   /* ---------- franja de marcas ---------- */
   if (C.marcas && C.marcas.length) {
     // se repite la lista para que la franja corra sin cortes
-    const grupo = Array.from({ length: Math.max(4, Math.ceil(10 / C.marcas.length)) }, () => C.marcas).flat();
-    const html = grupo.map((m) => `<span class="brand">${esc(m)}</span><span class="sep" aria-hidden="true">✦</span>`).join("");
+    const grupo = Array.from({ length: Math.max(2, Math.ceil(12 / C.marcas.length)) }, () => C.marcas).flat();
+    const html = grupo.map((m) => (typeof m === "string" || !m.logo)
+      ? `<span class="brand">${esc(m.nombre || m)}</span>`
+      : `<img class="brand-logo" src="${esc(m.logo)}" alt="${esc(m.nombre)}" style="--k:${m.escala || 1}" loading="eager">`
+    ).join("");
     $("#brandTrack").innerHTML = `<div class="marquee-group">${html}</div><div class="marquee-group" aria-hidden="true">${html}</div>`;
   } else {
     document.querySelector(".brands").hidden = true;
@@ -424,7 +427,7 @@
 
   /* ---------- inicio ---------- */
   if (window.FIREBASE_CONFIG) {
-    import("./db.js?v=20261123c")
+    import("./db.js?v=20261123d")
       .then(async (mod) => {
         await mod.init(window.FIREBASE_CONFIG, { emulador: !!window.FIREBASE_EMULADOR });
         DB = mod;
