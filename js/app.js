@@ -197,7 +197,12 @@
 
   /* ---------- paso 3: formulario ---------- */
   const form = $("#clientForm");
-  form.addEventListener("input", (e) => { e.target.classList.remove("invalid"); update(); });
+  form.addEventListener("input", (e) => {
+    e.target.classList.remove("invalid");
+    const err = form.querySelector(`[data-err="${e.target.name}"]`);
+    if (err) err.classList.remove("show");
+    update();
+  });
   function leerForm() {
     state.cliente = Object.fromEntries(new FormData(form).entries());
     for (const k in state.cliente) state.cliente[k] = state.cliente[k].trim();
@@ -208,10 +213,15 @@
     for (const el of form.querySelectorAll("[required]")) {
       let bad = !el.value.trim();
       if (el.name === "telefono") bad = el.value.replace(/\D/g, "").length < 8;
-      if (bad) { ok = false; if (marcar) el.classList.add("invalid"); }
+      if (bad) {
+        ok = false;
+        if (marcar) {
+          el.classList.add("invalid");
+          form.querySelector(`[data-err="${el.name}"]`)?.classList.add("show");
+        }
+      }
     }
-    const email = form.elements.email;
-    if (email.value && !email.checkValidity()) { ok = false; if (marcar) email.classList.add("invalid"); }
+    // El correo es opcional: nunca impide reservar
     return ok;
   }
 

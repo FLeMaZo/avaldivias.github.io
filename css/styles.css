@@ -266,7 +266,11 @@ a { color: var(--cyan); }
 }
 .form input::placeholder, .form textarea::placeholder { color: #51658a; }
 .form input:focus, .form textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(47, 139, 255, .2); }
-.form .invalid { border-color: #ef4444; }
+.form .invalid { border-color: #ef4444; box-shadow: 0 0 0 3px rgba(239, 68, 68, .18); }
+.form .err { display: none; color: #f87171; font-weight: 600; font-size: .8rem; }
+.form .err.show { display: block; }
+.req { color: var(--cyan); font-weight: 800; }
+.req-hint { margin: 0; font-size: .8rem; }
 .row { display: grid; grid-template-columns: 2fr 1fr; gap: 12px; }
 
 /* ---------- Resumen ---------- */
