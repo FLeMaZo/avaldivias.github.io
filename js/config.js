@@ -9,6 +9,13 @@ window.CONFIG = {
 
   // Número de WhatsApp que recibe las reservas: código país + número, sin "+" ni espacios
   whatsapp: "56995736685",
+
+  // Ubicación del taller (mapa al final de la página)
+  ubicacion: {
+    lat: -36.987792,
+    lng: -73.13855,
+    mapsUrl: "https://maps.app.goo.gl/6xhwmX1JSAHkN2Fs9",
+  },
   nota: "Precios sujetos a evaluación del vehículo.",
 
   moneda: "CLP",
