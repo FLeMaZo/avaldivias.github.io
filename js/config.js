@@ -33,7 +33,16 @@ window.CONFIG = {
   diasBloqueados: [],
 
   // Marcas que aparecen en la franja animada del inicio
-  marcas: ["Meguiar's", "Sonax"],
+  // escala: tamaño relativo (los logos redondos o cuadrados se ven mejor un poco más grandes)
+  marcas: [
+    { nombre: "Meguiar's", logo: "assets/brands/meguiars-white.png", escala: 1.25 },
+    { nombre: "Koch Chemie", logo: "assets/brands/koch-chemie.png", escala: 0.8 },
+    { nombre: "Gyeon", logo: "assets/brands/gyeon.png" },
+    { nombre: "Chemical Guys", logo: "assets/brands/chemical-guys.png", escala: 1.5 },
+    { nombre: "Rupes", logo: "assets/brands/rupes.png" },
+    { nombre: "MaxShine", logo: "assets/brands/maxshine.png" },
+    { nombre: "Big Foot", logo: "assets/brands/bigfoot.png", escala: 1.5 },
+  ],
 
   // Tipos de vehículo (los ids se usan en "precios" de cada servicio)
   vehiculos: [
