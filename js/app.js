@@ -325,7 +325,11 @@
       `UID:${r.id}@detailing`, `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, "").split(".")[0]}Z`,
       `DTSTART:${fmt(ini)}`, `DTEND:${fmt(Math.min(fin, 23 * 60 + 59))}`,
       `SUMMARY:${C.negocio} — ${r.servicios.join(", ")}`,
-      `LOCATION:${C.direccion}`, "END:VEVENT", "END:VCALENDAR",
+      `LOCATION:${C.direccion}`,
+      `DESCRIPTION:Código ${r.id}. Si no puedes asistir avisa por WhatsApp +${C.whatsapp}`,
+      "BEGIN:VALARM", "ACTION:DISPLAY", "TRIGGER:-P1D", `DESCRIPTION:Mañana tienes hora en ${C.negocio}`, "END:VALARM",
+      "BEGIN:VALARM", "ACTION:DISPLAY", "TRIGGER:-PT2H", `DESCRIPTION:En 2 horas: tu hora en ${C.negocio}`, "END:VALARM",
+      "END:VEVENT", "END:VCALENDAR",
     ].join("\r\n");
     const a = document.createElement("a");
     a.href = URL.createObjectURL(new Blob([ics], { type: "text/calendar" }));

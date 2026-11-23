@@ -22,7 +22,17 @@ function telWa(tel) {
   return d;
 }
 
-const state = { fecha: ymd(new Date()), reservas: [], slots: [], pendientes: [], tab: "dia" };
+const state = { fecha: ymd(new Date()), reservas: [], slots: [], pendientes: [], recordatorios: [], tab: "dia" };
+
+/** Próximo día con atención (mañana, o el siguiente que no esté cerrado). */
+function proximoDiaHabil() {
+  const d = new Date();
+  for (let i = 0; i < 7; i++) {
+    d.setDate(d.getDate() + 1);
+    if (C.horario[d.getDay()]) return ymd(d);
+  }
+  return ymd(d);
+}
 
 function toast(msg) {
   const t = $("#toast");
@@ -83,7 +93,20 @@ $("#todayBtn").addEventListener("click", () => { state.fecha = ymd(new Date()); 
 $("#dayInput").addEventListener("change", (e) => { if (e.target.value) { state.fecha = e.target.value; cargarDia(); } });
 
 /* ---------- carga de datos ---------- */
-async function cargarTodo() { await Promise.all([cargarDia(), cargarPendientes()]); }
+async function cargarTodo() { await Promise.all([cargarDia(), cargarPendientes(), cargarRecordatorios()]); }
+
+async function cargarRecordatorios() {
+  const f = proximoDiaHabil();
+  $("#recLabel").textContent = fechaLarga(f);
+  try {
+    state.recordatorios = (await DB.reservasEntre(f, f)).filter((r) => r.estado !== "cancelada");
+  } catch (e) { console.error(e); return; }
+  const faltan = state.recordatorios.filter((r) => !r.recordado).length;
+  $("#recCount").textContent = faltan || "";
+  $("#recList").innerHTML = state.recordatorios.length
+    ? state.recordatorios.map((r) => tarjeta(r, false, true)).join("")
+    : `<p class="empty">No tienes clientes agendados para ese día.</p>`;
+}
 
 async function cargarDia() {
   $("#dayLabel").textContent = fechaLarga(state.fecha);
@@ -114,12 +137,15 @@ async function cargarPendientes() {
 }
 
 /* ---------- render ---------- */
-function tarjeta(r, conFecha) {
+function tarjeta(r, conFecha, conRecordatorio = false) {
   const fin = deMin(aMin(r.hora) + (r.duracion || 0));
   const tel = telWa(r.telefono);
+  const btnRec = conRecordatorio
+    ? `<button type="button" class="btn rec ${r.recordado ? "hecho" : ""}" data-act="recordar" data-id="${r.id}">${r.recordado ? "✓ Recordatorio enviado · reenviar" : "📲 Enviar recordatorio"}</button>`
+    : "";
   const acciones = r.estado === "cancelada"
     ? `<a class="btn" href="https://wa.me/${tel}?text=${encodeURIComponent(msgCancelacion(r))}" target="_blank" rel="noopener">Avisar cancelación</a>`
-    : `${r.estado === "pendiente" ? `<button type="button" class="btn ok" data-act="confirmar" data-id="${r.id}">✓ Confirmar</button>` : ""}
+    : `${btnRec}${r.estado === "pendiente" ? `<button type="button" class="btn ok" data-act="confirmar" data-id="${r.id}">✓ Confirmar</button>` : ""}
        <a class="btn" href="https://wa.me/${tel}" target="_blank" rel="noopener">WhatsApp</a>
        <a class="btn" href="tel:${esc(r.telefono)}">Llamar</a>
        <button type="button" class="btn danger" data-act="cancelar" data-id="${r.id}">Cancelar</button>`;
@@ -137,6 +163,7 @@ function tarjeta(r, conFecha) {
       <span>🚘 ${esc(r.vehiculoTipo)} — ${esc(r.vehiculo)}${r.patente ? ` (${esc(r.patente)})` : ""}</span>
       ${r.email ? `<span>✉️ ${esc(r.email)}</span>` : ""}
       ${r.notas ? `<span>📝 ${esc(r.notas)}</span>` : ""}
+      ${r.recordado && !conRecordatorio ? `<span class="recordado">📲 Recordatorio enviado</span>` : ""}
       <span class="res-fecha">Código #${esc(r.id.slice(0, 6).toUpperCase())}</span>
     </div>
     <div class="res-actions">${acciones}</div>
@@ -183,6 +210,13 @@ function renderDia() {
 const msgConfirmacion = (r) =>
   `Hola ${r.nombre.split(" ")[0]}! 👋 Te confirmamos tu hora en ${C.negocio}:\n\n` +
   `📅 ${fechaLarga(r.fecha)} a las ${r.hora}\n🧽 ${r.servicio}\n💰 ${money(r.total)}\n\n¡Te esperamos! 🚗✨`;
+function msgRecordatorio(r) {
+  const manana = new Date(); manana.setDate(manana.getDate() + 1);
+  const cuando = r.fecha === ymd(manana) ? `mañana ${fechaLarga(r.fecha).toLowerCase()}` : `el ${fechaLarga(r.fecha).toLowerCase()}`;
+  return `Hola ${r.nombre.split(" ")[0]}! 👋 Te recordamos tu hora en ${C.negocio}:\n\n` +
+    `📅 ${cuando[0].toUpperCase() + cuando.slice(1)} a las ${r.hora}\n🧽 ${r.servicio}\n\n` +
+    `Si no puedes venir, avísanos por aquí para liberar el horario. ¡Te esperamos! 🚗✨`;
+}
 const msgCancelacion = (r) =>
   `Hola ${r.nombre.split(" ")[0]}, te escribimos de ${C.negocio}. Tu hora del ${fechaLarga(r.fecha)} a las ${r.hora} quedó cancelada. ` +
   `Si quieres, puedes agendar otro horario aquí: ${location.origin}${location.pathname.replace(/admin\.html$/, "")}`;
@@ -191,7 +225,7 @@ const msgCancelacion = (r) =>
 document.addEventListener("click", async (e) => {
   const b = e.target.closest("[data-act]");
   if (!b) return;
-  const r = [...state.reservas, ...state.pendientes].find((x) => x.id === b.dataset.id);
+  const r = [...state.reservas, ...state.pendientes, ...state.recordatorios].find((x) => x.id === b.dataset.id);
   if (!r) return;
 
   if (b.dataset.act === "confirmar") {
@@ -200,6 +234,13 @@ document.addEventListener("click", async (e) => {
     b.disabled = true;
     try { await DB.cambiarEstado(r.id, "confirmada"); toast("Reserva confirmada"); }
     catch (err) { console.error(err); w?.close(); toast("No se pudo confirmar. Intenta de nuevo."); }
+    cargarTodo();
+  }
+
+  if (b.dataset.act === "recordar") {
+    window.open(`https://wa.me/${telWa(r.telefono)}?text=${encodeURIComponent(msgRecordatorio(r))}`, "_blank");
+    try { await DB.actualizar(r.id, { recordado: true }); }
+    catch (err) { console.error(err); toast("No se pudo marcar como enviado."); }
     cargarTodo();
   }
 
