@@ -93,25 +93,29 @@
     <section class="panel" data-panel="3" hidden>
       <h2>Tus datos</h2>
       <form id="clientForm" class="form" novalidate>
-        <label>Nombre completo
-          <input name="nombre" autocomplete="name" required>
+        <p class="hint req-hint"><span class="req">*</span> Obligatorio</p>
+        <label><span>Nombre completo <b class="req">*</b></span>
+          <input name="nombre" autocomplete="name" maxlength="80" required>
+          <small class="err" data-err="nombre">Escribe tu nombre.</small>
         </label>
-        <label>Teléfono
-          <input name="telefono" type="tel" autocomplete="tel" placeholder="+56 9 1234 5678" required>
+        <label><span>Teléfono <b class="req">*</b></span>
+          <input name="telefono" type="tel" autocomplete="tel" placeholder="+56 9 1234 5678" maxlength="30" required>
+          <small class="err" data-err="telefono">Escribe un teléfono válido (ej: 9 1234 5678).</small>
         </label>
         <label>Correo (opcional)
-          <input name="email" type="email" autocomplete="email">
+          <input name="email" type="text" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" maxlength="120">
         </label>
         <div class="row">
-          <label>Marca y modelo
-            <input name="vehiculo" placeholder="Ej: Toyota Yaris" required>
+          <label><span>Marca y modelo <b class="req">*</b></span>
+            <input name="vehiculo" placeholder="Ej: Toyota Yaris" maxlength="80" required>
+            <small class="err" data-err="vehiculo">Escribe la marca y modelo de tu auto.</small>
           </label>
           <label>Patente (opcional)
-            <input name="patente" placeholder="ABCD12" maxlength="8">
+            <input name="patente" placeholder="ABCD12" maxlength="8" autocapitalize="characters">
           </label>
         </div>
         <label>Comentarios (opcional)
-          <textarea name="notas" rows="3" placeholder="Estado del auto, manchas, mascotas, etc."></textarea>
+          <textarea name="notas" rows="3" maxlength="600" placeholder="Estado del auto, manchas, mascotas, etc."></textarea>
         </label>
       </form>
     </section>
