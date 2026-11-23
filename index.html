@@ -33,7 +33,15 @@
 </head>
 <body>
   <header class="hero">
-    <div class="wrap">
+    <div class="bubbles" aria-hidden="true">
+      <span style="--x:8%;--s:14px;--d:9s;--w:-2s"></span><span style="--x:18%;--s:8px;--d:7s;--w:-5s"></span>
+      <span style="--x:30%;--s:18px;--d:11s;--w:-1s"></span><span style="--x:44%;--s:10px;--d:8s;--w:-6s"></span>
+      <span style="--x:56%;--s:22px;--d:12s;--w:-3s"></span><span style="--x:67%;--s:9px;--d:7.5s;--w:-4s"></span>
+      <span style="--x:76%;--s:16px;--d:10s;--w:-7s"></span><span style="--x:88%;--s:11px;--d:8.5s;--w:-2.5s"></span>
+      <span style="--x:94%;--s:20px;--d:13s;--w:-8s"></span><span style="--x:38%;--s:6px;--d:6.5s;--w:-3.5s"></span>
+    </div>
+    <div class="wrap hero-grid">
+      <div class="hero-text">
       <div class="hero-top">
         <div>
           <div class="brand-mark">Detailing</div>
@@ -43,18 +51,119 @@
       <h1>Studio <span>Ultima Finish</span></h1>
       <p class="lead">Agenda tu hora en menos de un minuto y recibe confirmación por WhatsApp.</p>
       <div class="hero-cta">
-        <span class="pill">📍 Lun a Sáb · <b>9:00 – 20:00</b></span>
+        <span class="pill">📍 Lun a Vie <b>9:00–20:00</b> · Sáb y Dom <b>10:00–20:00</b></span>
         <span class="pill">💬 Confirmación por WhatsApp</span>
+      </div>
+      </div>
+      <div class="hero-art">
+        <svg class="car" viewBox="0 0 640 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Auto deportivo con brillo">
+          <defs>
+            <linearGradient id="cBody" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#16325e"/>
+              <stop offset=".55" stop-color="#0a1a36"/>
+              <stop offset="1" stop-color="#040a16"/>
+            </linearGradient>
+            <linearGradient id="cLine" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#2f8bff"/>
+              <stop offset=".5" stop-color="#38d6ff"/>
+              <stop offset="1" stop-color="#9fe9ff"/>
+            </linearGradient>
+            <linearGradient id="cGlass" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#3a6fb8" stop-opacity=".9"/>
+              <stop offset=".5" stop-color="#10284d"/>
+              <stop offset="1" stop-color="#06101f"/>
+            </linearGradient>
+            <linearGradient id="cShine" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#fff" stop-opacity="0"/>
+              <stop offset=".5" stop-color="#d9f6ff" stop-opacity=".55"/>
+              <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+            </linearGradient>
+            <radialGradient id="cGround" cx=".5" cy=".5" r=".5">
+              <stop offset="0" stop-color="#2f8bff" stop-opacity=".55"/>
+              <stop offset="1" stop-color="#2f8bff" stop-opacity="0"/>
+            </radialGradient>
+            <filter id="cGlow" x="-20%" y="-40%" width="140%" height="180%">
+              <feGaussianBlur stdDeviation="4" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <filter id="cSoft"><feGaussianBlur stdDeviation="6"/></filter>
+            <clipPath id="cClip">
+              <path d="M52 176 L46 150 Q44 132 60 126 L120 116 Q150 112 180 96 Q230 66 300 62 Q350 60 392 84 L430 104 Q520 110 572 126 Q596 134 596 152 L590 176 L532 176 A42 42 0 0 0 448 176 L192 176 A42 42 0 0 0 108 176 Z"/>
+            </clipPath>
+          </defs>
+
+          <!-- líneas de velocidad -->
+          <g class="speed" stroke="url(#cLine)" stroke-linecap="round">
+            <line x1="-40" y1="118" x2="40" y2="118" stroke-width="2"/>
+            <line x1="-80" y1="142" x2="20" y2="142" stroke-width="1.5"/>
+            <line x1="-60" y1="164" x2="30" y2="164" stroke-width="2.5"/>
+          </g>
+
+          <!-- brillo en el piso -->
+          <ellipse cx="320" cy="206" rx="300" ry="18" fill="url(#cGround)"/>
+          <ellipse cx="320" cy="204" rx="230" ry="5" fill="#38d6ff" opacity=".35" filter="url(#cSoft)"/>
+
+          <!-- carrocería -->
+          <path class="body" d="M52 176 L46 150 Q44 132 60 126 L120 116 Q150 112 180 96 Q230 66 300 62 Q350 60 392 84 L430 104 Q520 110 572 126 Q596 134 596 152 L590 176 L532 176 A42 42 0 0 0 448 176 L192 176 A42 42 0 0 0 108 176 Z" fill="url(#cBody)"/>
+
+          <g clip-path="url(#cClip)">
+            <!-- reflejo superior de la pintura -->
+            <path d="M60 128 Q300 108 580 128 L580 134 Q300 118 60 138 Z" fill="#5fb4ff" opacity=".25"/>
+            <!-- vidrios -->
+            <path d="M190 104 Q236 74 300 70 L300 104 Z" fill="url(#cGlass)"/>
+            <path d="M308 70 Q346 69 380 88 L404 104 L308 104 Z" fill="url(#cGlass)"/>
+            <path d="M214 98 L262 76 L270 76 L224 100 Z M322 74 L340 74 L322 100 L314 100 Z" fill="#cfefff" opacity=".18"/>
+            <!-- destello que recorre el auto -->
+            <rect class="shine" x="-200" y="40" width="140" height="160" fill="url(#cShine)" transform="skewX(-20)"/>
+          </g>
+
+          <!-- contornos neón -->
+          <g fill="none" stroke="url(#cLine)" stroke-linecap="round" stroke-linejoin="round" filter="url(#cGlow)">
+            <path class="draw" pathLength="1" stroke-width="2.6" d="M52 176 L46 150 Q44 132 60 126 L120 116 Q150 112 180 96 Q230 66 300 62 Q350 60 392 84 L430 104 Q520 110 572 126 Q596 134 596 152 L590 176 L532 176 A42 42 0 0 0 448 176 L192 176 A42 42 0 0 0 108 176 Z"/>
+            <path class="draw d2" pathLength="1" stroke-width="1.6" d="M190 104 Q236 74 300 70 Q344 69 380 88 L404 104 Z M300 70 L300 104"/>
+            <path class="draw d3" pathLength="1" stroke-width="1.2" opacity=".7" d="M70 140 Q300 130 582 138 M196 166 L444 166 M302 108 L298 164"/>
+          </g>
+
+          <!-- espejo -->
+          <path d="M392 98 L408 96 Q414 100 410 106 L396 106 Z" fill="#0a1a36" stroke="#38d6ff" stroke-width="1.2"/>
+          <!-- focos -->
+          <path class="lamp" d="M556 124 L590 132 L588 140 L560 134 Z" fill="#dff8ff" filter="url(#cGlow)"/>
+          <path d="M46 136 L64 133 L62 144 L47 147 Z" fill="#ff3b5c" filter="url(#cGlow)" opacity=".9"/>
+
+          <!-- ruedas -->
+          <g class="wheel" transform="translate(150 176)">
+            <circle r="36" fill="#05080f" stroke="#1d3a66" stroke-width="3"/>
+            <circle r="25" fill="#0b1426" stroke="url(#cLine)" stroke-width="2"/>
+            <path d="M-14 -10 A17 17 0 0 1 2 -17" stroke="#ff3b5c" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <g class="spin" stroke="#8fb9ff" stroke-width="3.2" stroke-linecap="round">
+              <line x1="0" y1="-6" x2="0" y2="-22"/><line x1="5.7" y1="-1.9" x2="20.9" y2="-6.8"/>
+              <line x1="3.5" y1="4.9" x2="12.9" y2="17.8"/><line x1="-3.5" y1="4.9" x2="-12.9" y2="17.8"/>
+              <line x1="-5.7" y1="-1.9" x2="-20.9" y2="-6.8"/>
+            </g>
+            <circle r="5" fill="#38d6ff"/>
+          </g>
+          <g class="wheel" transform="translate(490 176)">
+            <circle r="36" fill="#05080f" stroke="#1d3a66" stroke-width="3"/>
+            <circle r="25" fill="#0b1426" stroke="url(#cLine)" stroke-width="2"/>
+            <path d="M-14 -10 A17 17 0 0 1 2 -17" stroke="#ff3b5c" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <g class="spin" stroke="#8fb9ff" stroke-width="3.2" stroke-linecap="round">
+              <line x1="0" y1="-6" x2="0" y2="-22"/><line x1="5.7" y1="-1.9" x2="20.9" y2="-6.8"/>
+              <line x1="3.5" y1="4.9" x2="12.9" y2="17.8"/><line x1="-3.5" y1="4.9" x2="-12.9" y2="17.8"/>
+              <line x1="-5.7" y1="-1.9" x2="-20.9" y2="-6.8"/>
+            </g>
+            <circle r="5" fill="#38d6ff"/>
+          </g>
+        </svg>
       </div>
     </div>
   </header>
 
   <main class="wrap">
     <ul class="badges" aria-label="Por qué elegirnos">
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6l7-3z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg>Productos profesionales</li>
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5L18 18M18 6l-2.5 2.5M8.5 15.5L6 18"/></svg>Atención al detalle</li>
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12l3 5-9 13L3 8l3-5z"/><path d="M3 8h18M9 3l-1.5 5L12 21M15 3l1.5 5L12 21"/></svg>Resultados que se notan</li>
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 4c-9 0-15 4-15 11 0 2 .6 3.5 1.5 5 6-1 12.5-5 13.5-16z"/><path d="M4 21c3-5 7-8.5 12-11"/></svg>Ambiente fresco y agradable</li>
+      <li style="--i:0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6l7-3z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg>Productos profesionales</li>
+      <li style="--i:1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5L18 18M18 6l-2.5 2.5M8.5 15.5L6 18"/></svg>Atención al detalle</li>
+      <li style="--i:2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12l3 5-9 13L3 8l3-5z"/><path d="M3 8h18M9 3l-1.5 5L12 21M15 3l1.5 5L12 21"/></svg>Resultados que se notan</li>
+      <li style="--i:3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 4c-9 0-15 4-15 11 0 2 .6 3.5 1.5 5 6-1 12.5-5 13.5-16z"/><path d="M4 21c3-5 7-8.5 12-11"/></svg>Ambiente fresco y agradable</li>
     </ul>
 
     <ol class="steps" id="stepper">
