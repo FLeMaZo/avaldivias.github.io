@@ -16,13 +16,13 @@ window.CONFIG = {
 
   // Horario de atención. 0 = domingo, 1 = lunes ... 6 = sábado. null = cerrado
   horario: {
-    0: null,
+    0: { abre: "10:00", cierra: "20:00" },
     1: { abre: "09:00", cierra: "20:00" },
     2: { abre: "09:00", cierra: "20:00" },
     3: { abre: "09:00", cierra: "20:00" },
     4: { abre: "09:00", cierra: "20:00" },
     5: { abre: "09:00", cierra: "20:00" },
-    6: { abre: "09:00", cierra: "20:00" },
+    6: { abre: "10:00", cierra: "20:00" },
   },
 
   intervaloMin: 60,      // cada cuántos minutos se ofrece una hora
@@ -34,11 +34,12 @@ window.CONFIG = {
 
   // Tipos de vehículo (los ids se usan en "precios" de cada servicio)
   vehiculos: [
-    { id: "auto", nombre: "Auto", icono: "🚗" },
-    { id: "suv", nombre: "SUV", icono: "🚙" },
-    { id: "suv_xl", nombre: "SUV XL", icono: "🚙" },
-    { id: "camioneta", nombre: "Camioneta", icono: "🛻" },
-    { id: "camioneta_xl", nombre: "Camioneta XL", icono: "🛻" },
+    // extraMin: minutos que se suman a la duración del servicio por el tamaño del vehículo
+    { id: "auto", nombre: "Auto", icono: "🚗", extraMin: 0 },
+    { id: "suv", nombre: "SUV", icono: "🚙", extraMin: 30 },
+    { id: "suv_xl", nombre: "SUV XL", icono: "🚙", extraMin: 45 },
+    { id: "camioneta", nombre: "Camioneta", icono: "🛻", extraMin: 45 },
+    { id: "camioneta_xl", nombre: "Camioneta XL", icono: "🛻", extraMin: 60 },
   ],
 
   // Servicios. "duracion" en minutos (estimada: ajústala a tu realidad)

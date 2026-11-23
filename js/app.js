@@ -38,7 +38,9 @@
   const serviciosSel = () => C.servicios.filter((s) => state.servicios.has(s.id));
   const precio = (s) => s.precios[state.vehiculo];
   const total = () => serviciosSel().reduce((a, s) => a + precio(s), 0);
-  const duracion = () => serviciosSel().reduce((a, s) => a + s.duracion, 0);
+  const extraVehiculo = () => vehiculoSel().extraMin || 0;
+  const durServicio = (s) => s.duracion + extraVehiculo();
+  const duracion = () => (state.servicios.size ? serviciosSel().reduce((a, s) => a + s.duracion, 0) + extraVehiculo() : 0);
 
   function load() { try { return JSON.parse(localStorage.getItem(STORE_KEY)) || []; } catch { return []; } }
   function save(list) { try { localStorage.setItem(STORE_KEY, JSON.stringify(list)); } catch { /* sin almacenamiento */ } }
@@ -82,7 +84,7 @@
          </div>
          <div class="body">
            <ul class="incluye">${s.incluye.map((i) => `<li>${esc(i)}</li>`).join("")}</ul>
-           <div class="meta"><span class="price">${money(precio(s))}</span><span class="dur">⏱ ${durText(s.duracion)}</span></div>
+           <div class="meta"><span class="price">${money(precio(s))}</span><span class="dur">⏱ ${durText(durServicio(s))}</span></div>
          </div>
        </button>`).join("");
   }
@@ -90,6 +92,7 @@
     const b = e.target.closest(".chip"); if (!b) return;
     state.vehiculo = b.dataset.id;
     renderVehiculos(); renderServicios(); update();
+    document.querySelectorAll(".service .price").forEach((p) => p.classList.add("pop"));
   });
   $("#serviceList").addEventListener("click", (e) => {
     const b = e.target.closest(".service"); if (!b) return;
@@ -414,6 +417,8 @@
   }
   renderVehiculos();
   renderServicios();
+  $("#serviceList").classList.add("intro");
+  setTimeout(() => $("#serviceList").classList.remove("intro"), 1500);
   renderMisReservas();
   update();
 })();
