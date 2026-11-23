@@ -58,6 +58,16 @@
     [C.negocio, C.direccion].filter(Boolean).map(esc).join(" · ") +
     (C.instagram ? ` · <a href="https://instagram.com/${encodeURIComponent(C.instagram)}" target="_blank" rel="noopener">@${esc(C.instagram)}</a>` : "");
 
+  /* ---------- ubicación ---------- */
+  if (C.ubicacion) {
+    const { lat, lng, mapsUrl } = C.ubicacion;
+    $("#mapFrame").src = `https://maps.google.com/maps?q=${lat},${lng}&z=16&hl=es&output=embed`;
+    $("#mapOpen").href = mapsUrl || `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+    $("#mapDir").href = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+    $("#mapWaze").href = `https://waze.com/ul?ll=${lat},${lng}&navigate=yes`;
+    $("#ubicacion").hidden = false;
+  }
+
   /* ---------- franja de marcas ---------- */
   if (C.marcas && C.marcas.length) {
     // se repite la lista para que la franja corra sin cortes
@@ -427,7 +437,7 @@
 
   /* ---------- inicio ---------- */
   if (window.FIREBASE_CONFIG) {
-    import("./db.js?v=20261123f")
+    import("./db.js?v=20261123g")
       .then(async (mod) => {
         await mod.init(window.FIREBASE_CONFIG, { emulador: !!window.FIREBASE_EMULADOR });
         DB = mod;

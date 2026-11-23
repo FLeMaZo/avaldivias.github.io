@@ -1,4 +1,4 @@
-import * as DB from "./db.js?v=20261123f";
+import * as DB from "./db.js?v=20261123g";
 
 const C = window.CONFIG;
 const $ = (s) => document.querySelector(s);
