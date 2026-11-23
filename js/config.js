@@ -42,6 +42,8 @@ window.CONFIG = {
     { nombre: "Rupes", logo: "assets/brands/rupes.png" },
     { nombre: "MaxShine", logo: "assets/brands/maxshine.png" },
     { nombre: "Big Foot", logo: "assets/brands/bigfoot.png", escala: 1.5 },
+    { nombre: "Menzerna", logo: "assets/brands/menzerna.png", escala: 0.7 },
+    { nombre: "Vonixx", logo: "assets/brands/vonixx.png", escala: 1.1 },
   ],
 
   // Tipos de vehículo (los ids se usan en "precios" de cada servicio)
