@@ -47,7 +47,7 @@
   document.title = `Agenda tu hora · ${C.negocio}`;
   $("#nota").textContent = C.nota || "";
   $("#nota1").textContent = C.nota || "";
-  $("#waFooter").href = `https://wa.me/${C.whatsapp}`;
+  $("#waFooter").href = `https://api.whatsapp.com/send?phone=${C.whatsapp}`;
   $("#waFooterText").textContent = "+" + C.whatsapp.replace(/^(\d{2})(\d)(\d{4})(\d{4})$/, "$1 $2 $3 $4");
   $("#footerInfo").innerHTML =
     [C.negocio, C.direccion].filter(Boolean).map(esc).join(" · ") +
@@ -247,20 +247,19 @@
   function mensajeWhatsApp(codigo) {
     const c = state.cliente;
     return [
-      `Hola ${C.negocio}! Quiero agendar una hora 🚗✨`,
-      codigo ? `🔖 Reserva #${codigo}` : null,
+      `Hola ${C.negocio}! Quiero agendar una hora.`,
+      codigo ? `*Reserva #${codigo}*` : null,
       ``,
-      `📅 ${fechaLarga(state.fecha)} a las ${state.hora}`,
-      `🧽 Servicio:`,
-      ...serviciosSel().map((s) => `  • ${s.nombre} (${money(precio(s))})`),
-      `💰 Total estimado: ${money(total())}`,
-      `⏱ Duración aprox.: ${durText(duracion())}`,
+      `*Fecha:* ${fechaLarga(state.fecha)} a las ${state.hora}`,
+      `*Servicio:* ${serviciosSel().map((s) => `${s.nombre} (${money(precio(s))})`).join(", ")}`,
+      `*Total estimado:* ${money(total())}`,
+      `*Duración aprox.:* ${durText(duracion())}`,
       ``,
-      `👤 ${c.nombre}`,
-      `📞 ${c.telefono}`,
-      c.email ? `✉️ ${c.email}` : null,
-      `🚘 ${vehiculoSel().nombre} — ${c.vehiculo}${c.patente ? " (" + c.patente.toUpperCase() + ")" : ""}`,
-      c.notas ? `📝 ${c.notas}` : null,
+      `*Nombre:* ${c.nombre}`,
+      `*Teléfono:* ${c.telefono}`,
+      c.email ? `*Correo:* ${c.email}` : null,
+      `*Vehículo:* ${vehiculoSel().nombre} - ${c.vehiculo}${c.patente ? " (" + c.patente.toUpperCase() + ")" : ""}`,
+      c.notas ? `*Comentarios:* ${c.notas}` : null,
     ].filter((l) => l !== null).join("\n");
   }
 
@@ -306,7 +305,7 @@
       vehiculo: state.cliente.vehiculo,
     };
     save([...load(), reserva]);
-    const url = `https://wa.me/${C.whatsapp}?text=${encodeURIComponent(mensajeWhatsApp(codigo))}`;
+    const url = `https://api.whatsapp.com/send?phone=${C.whatsapp}&text=${encodeURIComponent(mensajeWhatsApp(codigo))}`;
     $("#waLink").href = url;
     $("#icsBtn").onclick = () => descargarIcs(reserva);
     $("#codigo").textContent = codigo ? `Código de reserva: #${codigo}` : "";
