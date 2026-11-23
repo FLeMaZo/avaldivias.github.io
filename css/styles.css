@@ -38,7 +38,7 @@ a { color: var(--cyan); }
 /* ---------- Hero ---------- */
 .hero {
   position: relative; overflow: hidden; isolation: isolate;
-  padding: 26px 0 34px;
+  padding: calc(26px + env(safe-area-inset-top)) 0 34px;
   border-bottom: 1px solid var(--border);
   background: #000;
 }
