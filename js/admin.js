@@ -14,7 +14,9 @@ const fechaLarga = (s) => {
   return t[0].toUpperCase() + t.slice(1);
 };
 
-/** Teléfono chileno → formato internacional para wa.me */
+/** Teléfono chileno → formato internacional para WhatsApp */
+const waUrl = (tel, texto) =>
+  `https://api.whatsapp.com/send?phone=${tel}` + (texto ? `&text=${encodeURIComponent(texto)}` : "");
 function telWa(tel) {
   let d = String(tel || "").replace(/\D/g, "");
   if (d.length === 9 && d.startsWith("9")) d = "56" + d;
@@ -144,9 +146,9 @@ function tarjeta(r, conFecha, conRecordatorio = false) {
     ? `<button type="button" class="btn rec ${r.recordado ? "hecho" : ""}" data-act="recordar" data-id="${r.id}">${r.recordado ? "✓ Recordatorio enviado · reenviar" : "📲 Enviar recordatorio"}</button>`
     : "";
   const acciones = r.estado === "cancelada"
-    ? `<a class="btn" href="https://wa.me/${tel}?text=${encodeURIComponent(msgCancelacion(r))}" target="_blank" rel="noopener">Avisar cancelación</a>`
+    ? `<a class="btn" href="${waUrl(tel, msgCancelacion(r))}" target="_blank" rel="noopener">Avisar cancelación</a>`
     : `${btnRec}${r.estado === "pendiente" ? `<button type="button" class="btn ok" data-act="confirmar" data-id="${r.id}">✓ Confirmar</button>` : ""}
-       <a class="btn" href="https://wa.me/${tel}" target="_blank" rel="noopener">WhatsApp</a>
+       <a class="btn" href="${waUrl(tel)}" target="_blank" rel="noopener">WhatsApp</a>
        <a class="btn" href="tel:${esc(r.telefono)}">Llamar</a>
        <button type="button" class="btn danger" data-act="cancelar" data-id="${r.id}">Cancelar</button>`;
   return `<article class="rcard ${esc(r.estado)}">
@@ -208,14 +210,14 @@ function renderDia() {
 
 /* ---------- mensajes al cliente ---------- */
 const msgConfirmacion = (r) =>
-  `Hola ${r.nombre.split(" ")[0]}! 👋 Te confirmamos tu hora en ${C.negocio}:\n\n` +
-  `📅 ${fechaLarga(r.fecha)} a las ${r.hora}\n🧽 ${r.servicio}\n💰 ${money(r.total)}\n\n¡Te esperamos! 🚗✨`;
+  `Hola ${r.nombre.split(" ")[0]}! Te confirmamos tu hora en ${C.negocio}:\n\n` +
+  `*Fecha:* ${fechaLarga(r.fecha)} a las ${r.hora}\n*Servicio:* ${r.servicio}\n*Total:* ${money(r.total)}\n\n¡Te esperamos!`;
 function msgRecordatorio(r) {
   const manana = new Date(); manana.setDate(manana.getDate() + 1);
   const cuando = r.fecha === ymd(manana) ? `mañana ${fechaLarga(r.fecha).toLowerCase()}` : `el ${fechaLarga(r.fecha).toLowerCase()}`;
-  return `Hola ${r.nombre.split(" ")[0]}! 👋 Te recordamos tu hora en ${C.negocio}:\n\n` +
-    `📅 ${cuando[0].toUpperCase() + cuando.slice(1)} a las ${r.hora}\n🧽 ${r.servicio}\n\n` +
-    `Si no puedes venir, avísanos por aquí para liberar el horario. ¡Te esperamos! 🚗✨`;
+  return `Hola ${r.nombre.split(" ")[0]}! Te recordamos tu hora en ${C.negocio}:\n\n` +
+    `*Fecha:* ${cuando[0].toUpperCase() + cuando.slice(1)} a las ${r.hora}\n*Servicio:* ${r.servicio}\n\n` +
+    `Si no puedes venir, avísanos por aquí para liberar el horario. ¡Te esperamos!`;
 }
 const msgCancelacion = (r) =>
   `Hola ${r.nombre.split(" ")[0]}, te escribimos de ${C.negocio}. Tu hora del ${fechaLarga(r.fecha)} a las ${r.hora} quedó cancelada. ` +
@@ -230,7 +232,7 @@ document.addEventListener("click", async (e) => {
 
   if (b.dataset.act === "confirmar") {
     // Abrir WhatsApp en el mismo toque para que no lo bloquee el navegador
-    const w = window.open(`https://wa.me/${telWa(r.telefono)}?text=${encodeURIComponent(msgConfirmacion(r))}`, "_blank");
+    const w = window.open(waUrl(telWa(r.telefono), msgConfirmacion(r)), "_blank");
     b.disabled = true;
     try { await DB.cambiarEstado(r.id, "confirmada"); toast("Reserva confirmada"); }
     catch (err) { console.error(err); w?.close(); toast("No se pudo confirmar. Intenta de nuevo."); }
@@ -238,7 +240,7 @@ document.addEventListener("click", async (e) => {
   }
 
   if (b.dataset.act === "recordar") {
-    window.open(`https://wa.me/${telWa(r.telefono)}?text=${encodeURIComponent(msgRecordatorio(r))}`, "_blank");
+    window.open(waUrl(telWa(r.telefono), msgRecordatorio(r)), "_blank");
     try { await DB.actualizar(r.id, { recordado: true }); }
     catch (err) { console.error(err); toast("No se pudo marcar como enviado."); }
     cargarTodo();
