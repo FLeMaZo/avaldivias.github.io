@@ -1,4 +1,4 @@
-import * as DB from "./db.js?v=20261123g";
+import * as DB from "./db.js?v=20261123h";
 
 const C = window.CONFIG;
 const $ = (s) => document.querySelector(s);
@@ -164,7 +164,9 @@ function tarjeta(r, conFecha, conRecordatorio = false) {
       <span><b>${esc(r.nombre)}</b> · ${esc(r.telefono)}</span>
       <span>🚘 ${esc(r.vehiculoTipo)} — ${esc(r.vehiculo)}${r.patente ? ` (${esc(r.patente)})` : ""}</span>
       ${r.email ? `<span>✉️ ${esc(r.email)}</span>` : ""}
-      ${r.notas ? `<span>📝 ${esc(r.notas)}</span>` : ""}
+      ${r.notas?.startsWith("A domicilio:")
+        ? `<span class="domi">🏠 ${esc(r.notas.split(" · ")[0])}</span>${r.notas.includes(" · ") ? `<span>📝 ${esc(r.notas.split(" · ").slice(1).join(" · "))}</span>` : ""}`
+        : (r.notas ? `<span>📝 ${esc(r.notas)}</span>` : "")}
       ${r.recordado && !conRecordatorio ? `<span class="recordado">📲 Recordatorio enviado</span>` : ""}
       <span class="res-fecha">Código #${esc(r.id.slice(0, 6).toUpperCase())}</span>
     </div>

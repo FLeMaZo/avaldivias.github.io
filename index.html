@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Studio Ultima Finish</title>
-  <meta name="description" content="Agenda tu hora de detailing online: Essential Finish, Studio Clean y Studio Reset.">
+  <title>Studio Ultima Finish | Agenda tu hora de detailing en Coronel</title>
+  <meta name="description" content="Agenda online tu hora de detailing en Coronel: lavado detallado, limpieza de tapiz y protección. Taller en El Olivo 2850, Bypass Coronel.">
   <meta name="theme-color" content="#04070f">
   <!-- Vista previa al compartir el enlace (WhatsApp, Instagram, Facebook) -->
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Studio Ultima Finish">
   <meta property="og:title" content="Studio Ultima Finish · Agenda tu hora">
-  <meta property="og:description" content="Detailing y estética automotriz. Elige tu servicio, día y hora, y reserva por WhatsApp en un minuto.">
+  <meta property="og:description" content="Detailing y estética automotriz en Coronel. Elige tu servicio, día y hora, y reserva en un minuto.">
   <meta property="og:url" content="https://ultimafinishstudio.github.io/">
   <meta property="og:image" content="https://ultimafinishstudio.github.io/assets/preview.jpg">
   <meta property="og:image:type" content="image/jpeg">
@@ -29,7 +29,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,700;0,800;1,700;1,800;1,900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=20261123g">
+  <link rel="stylesheet" href="css/styles.css?v=20261123h">
 </head>
 <body>
   <header class="hero">
@@ -53,6 +53,7 @@
       <div class="hero-cta">
         <span class="pill">📍 Lun a Vie <b>9:00–20:00</b> · Sáb y Dom <b>10:00–20:00</b></span>
         <span class="pill">💬 Confirmación por WhatsApp</span>
+        <span class="pill">📍 El Olivo 2850 · <b>Coronel</b></span>
       </div>
       </div>
     </div>
@@ -71,6 +72,13 @@
       <li style="--i:3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 4c-9 0-15 4-15 11 0 2 .6 3.5 1.5 5 6-1 12.5-5 13.5-16z"/><path d="M4 21c3-5 7-8.5 12-11"/></svg>Ambiente fresco y agradable</li>
     </ul>
 
+    <section class="reviews" id="reviews" hidden aria-label="Opiniones de clientes">
+      <a class="reviews-head" id="reviewsLink" target="_blank" rel="noopener">
+        <strong id="reviewsScore"></strong><span class="stars">★★★★★</span><span id="reviewsCount"></span>
+      </a>
+      <div class="reviews-row" id="reviewsRow"></div>
+    </section>
+
     <ol class="steps" id="stepper">
       <li class="active" data-step="1"><span>1</span>Servicio</li>
       <li data-step="2"><span>2</span>Fecha y hora</li>
@@ -85,6 +93,13 @@
 
       <h2>Elige tu servicio</h2>
       <div class="services" id="serviceList"></div>
+      <div class="quote" id="quoteBox" hidden>
+        <div>
+          <strong>¿Buscas <span id="quoteList"></span>?</strong>
+          <span>Los cotizamos según el estado de tu vehículo.</span>
+        </div>
+        <a class="btn" id="quoteBtn" target="_blank" rel="noopener">Cotizar por WhatsApp</a>
+      </div>
       <p class="note" id="nota1"></p>
     </section>
 
@@ -114,6 +129,15 @@
       <h2>Tus datos</h2>
       <form id="clientForm" class="form" novalidate>
         <p class="hint req-hint"><span class="req">*</span> Obligatorio</p>
+        <fieldset class="lugar" id="lugarBox" hidden>
+          <legend>¿Dónde lo atendemos? <b class="req">*</b></legend>
+          <label class="opt"><input type="radio" name="lugar" value="taller" checked><span>🏢 En el taller<small id="tallerDir"></small></span></label>
+          <label class="opt"><input type="radio" name="lugar" value="domicilio"><span>🏠 A domicilio<small>Vamos a tu casa u oficina</small></span></label>
+        </fieldset>
+        <label id="dirBox" hidden><span>Dirección para el servicio <b class="req">*</b></span>
+          <input name="direccionCliente" autocomplete="street-address" maxlength="120" placeholder="Calle, número y comuna">
+          <small class="err" data-err="direccionCliente">Escribe la dirección donde atenderemos tu vehículo.</small>
+        </label>
         <label><span>Nombre completo <b class="req">*</b></span>
           <input name="nombre" autocomplete="name" maxlength="80" required>
           <small class="err" data-err="nombre">Escribe tu nombre.</small>
@@ -135,7 +159,7 @@
           </label>
         </div>
         <label>Comentarios (opcional)
-          <textarea name="notas" rows="3" maxlength="600" placeholder="Estado del auto, manchas, mascotas, etc."></textarea>
+          <textarea name="notas" rows="3" maxlength="450" placeholder="Estado del auto, manchas, mascotas, etc."></textarea>
         </label>
       </form>
     </section>
@@ -197,13 +221,19 @@
     </div>
   </section>
 
+  <a class="wa-float" id="waFloat" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 00-8.6 15.1L2 22l5-1.3A10 10 0 1012 2zm0 18.2a8.2 8.2 0 01-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1112 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 01-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 00-.7.3 3 3 0 00-.9 2.2 5.2 5.2 0 001.1 2.7 11.8 11.8 0 004.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3z"/></svg>
+  </a>
+
   <footer class="footer wrap">
+    <div class="social" id="social"></div>
     <a class="wa" id="waFooter" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 00-8.6 15.1L2 22l5-1.3A10 10 0 1012 2zm0 18.2a8.2 8.2 0 01-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1112 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 01-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 00-.7.3 3 3 0 00-.9 2.2 5.2 5.2 0 001.1 2.7 11.8 11.8 0 004.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3z"/></svg><span id="waFooterText"></span></a>
     <p id="footerInfo"></p>
+    <p class="web-line" id="webLine" hidden>🌐 <a id="webLink" target="_blank" rel="noopener"></a></p>
   </footer>
 
-  <script src="js/config.js?v=20261123g"></script>
-  <script src="js/firebase-config.js?v=20261123g"></script>
-  <script src="js/app.js?v=20261123g"></script>
+  <script src="js/config.js?v=20261123h"></script>
+  <script src="js/firebase-config.js?v=20261123h"></script>
+  <script src="js/app.js?v=20261123h"></script>
 </body>
 </html>

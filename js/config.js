@@ -4,8 +4,27 @@
 window.CONFIG = {
   negocio: "Studio Ultima Finish",
   eslogan: "Detailing · Car Care · Estética Automotriz",
-  direccion: "",                // ej: "Av. Siempre Viva 123, Iquique". Vacío = se oculta
-  instagram: "ultimafinishdetailing_ccp",              // ej: "studioultimafinish" (sin @). Vacío = se oculta
+  direccion: "El Olivo 2850, Bypass Coronel",
+  instagram: "ultimafinishdetailing_ccp",   // sin @. Vacío = se oculta
+  facebook: "https://www.facebook.com/people/Ultimafinishdetailing/61588083016155/",
+  tiktok: "ultimafinishdetailing",          // sin @
+  web: "https://www.ultimafinishdetailing.cl",
+  domicilio: false,                         // true = ofrecer atención a domicilio al reservar
+
+  // Servicios que se cotizan por WhatsApp (no se agendan directo)
+  cotizar: ["Pulidos", "Sellados cerámicos", "Lavado de motor"],
+
+  // Reseñas de Google (copiadas de la ficha del negocio)
+  resenas: {
+    nota: 5.0,
+    total: 10,
+    lista: [
+      { autor: "Gonzalo L.", texto: "Excelente servicio, el auto quedó 10/10, buena atención." },
+      { autor: "Duality", texto: "Muy buena experiencia con el servicio. El trato fue de primera, muy amables desde que llegué. Hicieron un trabajo detallado y a un precio súper competitivo. Da gusto encontrar lugares con esta calidad humana y profesional." },
+      { autor: "Jona A.", texto: "Una locura como quedan los autos y muy amable la atención, 5/5 🔥" },
+      { autor: "Maikol A.", texto: "Buena atención, los vehículos quedan como nuevos 🦾" },
+    ],
+  },
 
   // Número de WhatsApp que recibe las reservas: código país + número, sin "+" ni espacios
   whatsapp: "56995736685",

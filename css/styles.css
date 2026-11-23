@@ -386,6 +386,76 @@ a { color: var(--cyan); }
 .total strong { font-family: var(--display); font-style: italic; font-weight: 900; font-size: 1.45rem; line-height: 1.1; }
 .bar-btns { display: flex; gap: 8px; flex-shrink: 0; }
 
+/* ---------- Reseñas ---------- */
+.reviews { margin-top: 22px; }
+.reviews-head {
+  display: inline-flex; align-items: baseline; gap: 8px; text-decoration: none; color: var(--text); margin-bottom: 10px;
+}
+.reviews-head strong { font-family: var(--display); font-style: italic; font-weight: 900; font-size: 1.5rem; }
+.reviews-head span:last-child { color: var(--muted); font-size: .85rem; text-decoration: underline; }
+.stars { color: #fbbf24; letter-spacing: 1px; }
+.reviews-row {
+  display: grid; grid-auto-flow: column; grid-auto-columns: minmax(250px, 1fr); gap: 10px;
+  overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 6px; scrollbar-width: thin;
+}
+.review {
+  margin: 0; scroll-snap-align: start; background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+  padding: 14px; display: flex; flex-direction: column; gap: 8px;
+}
+.review blockquote {
+  margin: 0; font-size: .88rem; color: #c9d6f0; flex: 1;
+  display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden;
+}
+.review figcaption { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: .85rem; }
+.review figcaption i {
+  font-style: normal; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #fff; font-size: .8rem;
+}
+
+/* ---------- Cotizar ---------- */
+.quote {
+  margin-top: 14px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  background: var(--surface); border: 1px dashed #33568f; border-radius: var(--radius); padding: 14px 16px;
+}
+.quote strong { display: block; }
+.quote > div > span { color: var(--muted); font-size: .85rem; }
+.quote strong span { color: var(--cyan); }
+
+/* ---------- Taller / domicilio ---------- */
+.lugar { border: 0; padding: 0; margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.lugar legend { font-size: .85rem; font-weight: 700; color: #c9d6f0; margin-bottom: 6px; padding: 0; }
+.lugar .opt { display: block; cursor: pointer; }
+.lugar .opt input { position: absolute; opacity: 0; pointer-events: none; }
+.lugar .opt span {
+  display: flex; flex-direction: column; gap: 2px; height: 100%; padding: 12px; border-radius: 12px;
+  background: var(--surface); border: 1.5px solid var(--border); font-weight: 700; color: var(--text); transition: all .15s;
+}
+.lugar .opt small { font-weight: 400; color: var(--muted); font-size: .76rem; }
+.lugar .opt input:checked + span { border-color: var(--accent); box-shadow: var(--glow); background: linear-gradient(180deg, rgba(47, 139, 255, .14), var(--surface)); }
+.lugar .opt input:focus-visible + span { outline: 2px solid var(--cyan); }
+
+/* ---------- WhatsApp flotante ---------- */
+.wa-float {
+  position: fixed; right: 16px; bottom: calc(96px + env(safe-area-inset-bottom)); z-index: 11;
+  width: 54px; height: 54px; border-radius: 50%; display: grid; place-items: center;
+  background: #25d366; color: #fff; box-shadow: 0 8px 24px rgba(0, 0, 0, .45), 0 0 0 0 rgba(37, 211, 102, .5);
+  animation: waPulse 2.6s ease-out infinite;
+}
+.wa-float svg { width: 30px; height: 30px; }
+@keyframes waPulse { 0% { box-shadow: 0 8px 24px rgba(0,0,0,.45), 0 0 0 0 rgba(37,211,102,.5); } 70%, 100% { box-shadow: 0 8px 24px rgba(0,0,0,.45), 0 0 0 16px rgba(37,211,102,0); } }
+
+/* ---------- Redes ---------- */
+.social { display: flex; justify-content: center; gap: 12px; margin-bottom: 14px; }
+.social a {
+  width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; color: var(--text);
+  background: var(--surface); border: 1px solid var(--border); transition: all .2s;
+}
+.social a:hover { border-color: var(--accent); color: var(--cyan); transform: translateY(-2px); }
+.social svg { width: 20px; height: 20px; }
+
+.web-line { margin: 4px 0 0; }
+.web-line a { font-weight: 700; }
+
 /* ---------- Ubicación ---------- */
 .ubicacion { margin-top: 44px; }
 .sec-title {
