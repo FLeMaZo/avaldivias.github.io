@@ -39,8 +39,11 @@
   const precio = (s) => s.precios[state.vehiculo];
   const total = () => serviciosSel().reduce((a, s) => a + precio(s), 0);
   const extraVehiculo = () => vehiculoSel().extraMin || 0;
-  const durServicio = (s) => s.duracion + extraVehiculo();
-  const duracion = () => (state.servicios.size ? serviciosSel().reduce((a, s) => a + s.duracion, 0) + extraVehiculo() : 0);
+  const extraServicio = (s) => (s.extraPorVehiculo || {})[state.vehiculo] || 0;
+  const durServicio = (s) => s.duracion + extraServicio(s) + extraVehiculo();
+  const duracion = () => (state.servicios.size
+    ? serviciosSel().reduce((a, s) => a + s.duracion + extraServicio(s), 0) + extraVehiculo()
+    : 0);
 
   function load() { try { return JSON.parse(localStorage.getItem(STORE_KEY)) || []; } catch { return []; } }
   function save(list) { try { localStorage.setItem(STORE_KEY, JSON.stringify(list)); } catch { /* sin almacenamiento */ } }
