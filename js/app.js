@@ -49,14 +49,62 @@
   function save(list) { try { localStorage.setItem(STORE_KEY, JSON.stringify(list)); } catch { /* sin almacenamiento */ } }
 
   /* ---------- cabecera / pie ---------- */
-  document.title = `Agenda tu hora · ${C.negocio}`;
   $("#nota").textContent = C.nota || "";
   $("#nota1").textContent = C.nota || "";
   $("#waFooter").href = `https://api.whatsapp.com/send?phone=${C.whatsapp}`;
   $("#waFooterText").textContent = "+" + C.whatsapp.replace(/^(\d{2})(\d)(\d{4})(\d{4})$/, "$1 $2 $3 $4");
   $("#footerInfo").innerHTML =
-    [C.negocio, C.direccion].filter(Boolean).map(esc).join(" · ") +
-    (C.instagram ? ` · <a href="https://instagram.com/${encodeURIComponent(C.instagram)}" target="_blank" rel="noopener">@${esc(C.instagram)}</a>` : "");
+    [C.negocio, C.direccion].filter(Boolean).map(esc).join(" · ");
+  {
+    const red = (href, label, path) => `<a href="${href}" target="_blank" rel="noopener" aria-label="${label}"><svg viewBox="0 0 24 24" fill="currentColor">${path}</svg></a>`;
+    $("#social").innerHTML = [
+      C.instagram && red(`https://instagram.com/${encodeURIComponent(C.instagram)}`, "Instagram",
+        '<path d="M12 7.3A4.7 4.7 0 1016.7 12 4.7 4.7 0 0012 7.3zm0 7.8A3.1 3.1 0 1115.1 12 3.1 3.1 0 0112 15.1zM17 5.9a1.1 1.1 0 101.1 1.1A1.1 1.1 0 0017 5.9zM21.9 7.1a5.4 5.4 0 00-1.5-3.8 5.4 5.4 0 00-3.8-1.5C15.1 1.7 8.9 1.7 7.4 1.8a5.4 5.4 0 00-3.8 1.5 5.4 5.4 0 00-1.5 3.8c-.1 1.5-.1 7.7 0 9.2a5.4 5.4 0 001.5 3.8 5.4 5.4 0 003.8 1.5c1.5.1 7.7.1 9.2 0a5.4 5.4 0 003.8-1.5 5.4 5.4 0 001.5-3.8c.1-1.5.1-7.7 0-9.2zM19.6 18a3.1 3.1 0 01-1.8 1.8c-1.2.5-4.1.4-5.8.4s-4.6.1-5.8-.4A3.1 3.1 0 014.4 18c-.5-1.2-.4-4.1-.4-5.8s-.1-4.6.4-5.8A3.1 3.1 0 016.2 4.6C7.4 4.1 10.3 4.2 12 4.2s4.6-.1 5.8.4a3.1 3.1 0 011.8 1.8c.5 1.2.4 4.1.4 5.8s.1 4.6-.4 5.8z"/>'),
+      C.facebook && red(C.facebook, "Facebook",
+        '<path d="M14 8.5V6.6c0-.8.2-1.3 1.4-1.3H17V2.1A21 21 0 0014.6 2C12.3 2 10.7 3.4 10.7 6v2.5H8v3.6h2.7V22H14v-9.9h2.7l.4-3.6z"/>'),
+      C.tiktok && red(`https://www.tiktok.com/@${encodeURIComponent(C.tiktok)}`, "TikTok",
+        '<path d="M16.6 5.8A4.3 4.3 0 0115.5 3h-3.1v12.4a2.6 2.6 0 11-2.6-2.6 2.7 2.7 0 01.8.1V9.7a5.8 5.8 0 00-.8-.1 5.8 5.8 0 105.8 5.8V9.1a7.4 7.4 0 004.3 1.4V7.4a4.3 4.3 0 01-3.3-1.6z"/>'),
+    ].filter(Boolean).join("");
+  }
+  if (C.web) {
+    $("#webLink").href = C.web;
+    $("#webLink").textContent = C.web.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");
+    $("#webLine").hidden = false;
+  }
+  $("#waFloat").href = `https://api.whatsapp.com/send?phone=${C.whatsapp}&text=${encodeURIComponent(`Hola ${C.negocio}! Tengo una consulta.`)}`;
+
+  /* ---------- reseñas ---------- */
+  if (C.resenas && C.resenas.lista?.length) {
+    const R = C.resenas;
+    $("#reviewsScore").textContent = R.nota.toFixed(1);
+    $("#reviewsCount").textContent = `${R.total} reseñas en Google`;
+    $("#reviewsLink").href = C.ubicacion?.mapsUrl || "#";
+    $("#reviewsRow").innerHTML = R.lista.map((r) =>
+      `<figure class="review"><span class="stars">★★★★★</span><blockquote>“${esc(r.texto)}”</blockquote>
+       <figcaption><i>${esc(r.autor[0])}</i>${esc(r.autor)}</figcaption></figure>`).join("");
+    $("#reviews").hidden = false;
+  }
+
+  /* ---------- cotizar por WhatsApp ---------- */
+  if (C.cotizar?.length) {
+    const lista = C.cotizar.map((x) => x.toLowerCase());
+    $("#quoteList").textContent = lista.length > 1 ? `${lista.slice(0, -1).join(", ")} o ${lista.at(-1)}` : lista[0];
+    $("#quoteBtn").href = `https://api.whatsapp.com/send?phone=${C.whatsapp}&text=${encodeURIComponent(`Hola ${C.negocio}! Quiero cotizar un servicio (${C.cotizar.join(" / ")}). Mi vehículo es: `)}`;
+    $("#quoteBox").hidden = false;
+  }
+
+  /* ---------- taller o domicilio ---------- */
+  if (C.domicilio) {
+    $("#lugarBox").hidden = false;
+    $("#tallerDir").textContent = C.direccion || "";
+  }
+  const aDomicilio = () => C.domicilio && $("#clientForm").elements.lugar.value === "domicilio";
+  document.addEventListener("change", (e) => {
+    if (e.target.name === "lugar") {
+      $("#dirBox").hidden = !aDomicilio();
+      $("#dirBox input").required = aDomicilio();
+    }
+  });
 
   /* ---------- ubicación ---------- */
   if (C.ubicacion) {
@@ -262,6 +310,7 @@
   function renderResumen() {
     const c = state.cliente;
     const filas = [
+      ["Lugar", aDomicilio() ? `A domicilio · ${c.direccionCliente}` : `En el taller${C.direccion ? " · " + C.direccion : ""}`],
       ["Vehículo", `${vehiculoSel().nombre} · ${c.vehiculo}${c.patente ? " (" + c.patente.toUpperCase() + ")" : ""}`],
       ...serviciosSel().map((s) => [s.nombre, money(precio(s))]),
       ["Fecha", fechaLarga(state.fecha)],
@@ -284,6 +333,7 @@
       codigo ? `*Reserva #${codigo}*` : null,
       ``,
       `*Fecha:* ${fechaLarga(state.fecha)} a las ${state.hora}`,
+      `*Lugar:* ${aDomicilio() ? `A domicilio - ${c.direccionCliente}` : "En el taller"}`,
       `*Servicio:* ${serviciosSel().map((s) => `${s.nombre} (${money(precio(s))})`).join(", ")}`,
       `*Total estimado:* ${money(total())}`,
       `*Duración aprox.:* ${durText(duracion())}`,
@@ -312,7 +362,8 @@
           servicio: serviciosSel().map((s) => s.nombre).join(" + "),
           vehiculoTipo: vehiculoSel().nombre, total: total(),
           nombre: c.nombre, telefono: c.telefono, email: c.email || "",
-          vehiculo: c.vehiculo, patente: (c.patente || "").toUpperCase(), notas: c.notas || "",
+          vehiculo: c.vehiculo, patente: (c.patente || "").toUpperCase(),
+          notas: aDomicilio() ? `A domicilio: ${c.direccionCliente}${c.notas ? " · " + c.notas : ""}` : (c.notas || ""),
         });
         codigo = id.slice(0, 6).toUpperCase();
       } catch (e) {
@@ -336,6 +387,7 @@
       servicios: serviciosSel().map((s) => s.nombre),
       total: total(), duracion: duracion(),
       vehiculo: state.cliente.vehiculo,
+      lugar: aDomicilio() ? state.cliente.direccionCliente : C.direccion,
     };
     save([...load(), reserva]);
     const url = `https://api.whatsapp.com/send?phone=${C.whatsapp}&text=${encodeURIComponent(mensajeWhatsApp(codigo))}`;
@@ -357,7 +409,7 @@
       `UID:${r.id}@detailing`, `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, "").split(".")[0]}Z`,
       `DTSTART:${fmt(ini)}`, `DTEND:${fmt(Math.min(fin, 23 * 60 + 59))}`,
       `SUMMARY:${C.negocio} — ${r.servicios.join(", ")}`,
-      `LOCATION:${C.direccion}`,
+      `LOCATION:${r.lugar || C.direccion || ""}`,
       `DESCRIPTION:Código ${r.id}. Si no puedes asistir avisa por WhatsApp +${C.whatsapp}`,
       "BEGIN:VALARM", "ACTION:DISPLAY", "TRIGGER:-P1D", `DESCRIPTION:Mañana tienes hora en ${C.negocio}`, "END:VALARM",
       "BEGIN:VALARM", "ACTION:DISPLAY", "TRIGGER:-PT2H", `DESCRIPTION:En 2 horas: tu hora en ${C.negocio}`, "END:VALARM",
@@ -432,12 +484,13 @@
   $("#backBtn").addEventListener("click", () => irA(Math.max(1, state.step - 1)));
   $("#restartBtn").addEventListener("click", () => {
     state.servicios.clear(); state.fecha = null; state.hora = null;
-    form.reset(); renderServicios(); irA(1);
+    form.reset(); $("#dirBox").hidden = true; $("#dirBox input").required = false;
+    renderServicios(); irA(1);
   });
 
   /* ---------- inicio ---------- */
   if (window.FIREBASE_CONFIG) {
-    import("./db.js?v=20261123g")
+    import("./db.js?v=20261123h")
       .then(async (mod) => {
         await mod.init(window.FIREBASE_CONFIG, { emulador: !!window.FIREBASE_EMULADOR });
         DB = mod;
