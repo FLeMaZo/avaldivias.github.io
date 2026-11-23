@@ -427,7 +427,7 @@
 
   /* ---------- inicio ---------- */
   if (window.FIREBASE_CONFIG) {
-    import("./db.js?v=20261123e")
+    import("./db.js?v=20261123f")
       .then(async (mod) => {
         await mod.init(window.FIREBASE_CONFIG, { emulador: !!window.FIREBASE_EMULADOR });
         DB = mod;
